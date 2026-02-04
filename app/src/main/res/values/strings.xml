@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="app_name">Vector</string>
-    <string name="news_tab">News</string>
-    <string name="markets_tab">Markets</string>
-    <string name="portfolio_tab">Portfolio</string>
-    <string name="settings_tab">Settings</string>
-</resources>
