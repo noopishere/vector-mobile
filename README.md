@@ -1,6 +1,6 @@
 # Vector Mobile 📱
 
-**News & Prediction Markets App for Android**
+**News & Prediction Markets App for Android & iOS**
 
 Mobile companion app for [vector.markets](https://vector.markets) - trade prediction markets with precision.
 
@@ -40,41 +40,53 @@ Minimal, monospace aesthetic matching vector.markets:
 
 ## Tech Stack
 
-- **Language**: Kotlin
-- **UI**: Jetpack Compose
-- **Architecture**: MVVM + Clean Architecture
-- **Networking**: Retrofit + OkHttp
-- **Local Storage**: Room Database
-- **DI**: Hilt
-- **Async**: Coroutines + Flow
+- **Framework**: React Native + Expo
+- **Language**: TypeScript
+- **State Management**: Zustand
+- **Navigation**: React Navigation
+- **Styling**: NativeWind (TailwindCSS)
+- **API**: React Query + Axios
+- **Storage**: AsyncStorage + MMKV
 
 ## Project Structure
 
 ```
-app/
-├── data/
-│   ├── api/           # API clients
-│   ├── db/            # Room database
-│   ├── repository/    # Data repositories
-│   └── models/        # Data models
-├── domain/
-│   ├── models/        # Domain entities
-│   ├── repository/    # Repository interfaces
-│   └── usecases/      # Business logic
-├── presentation/
-│   ├── ui/
-│   │   ├── news/      # News feed screens
-│   │   ├── markets/   # Prediction markets
-│   │   ├── portfolio/ # Portfolio tracking
-│   │   └── settings/  # App settings
-│   ├── viewmodels/    # ViewModels
-│   └── components/    # Reusable UI components
-└── di/                # Dependency injection
+src/
+├── api/              # API clients & hooks
+├── components/       # Reusable UI components
+├── screens/
+│   ├── News/         # News feed screens
+│   ├── Markets/      # Prediction markets
+│   ├── Portfolio/    # Portfolio tracking
+│   └── Settings/     # App settings
+├── navigation/       # Navigation config
+├── store/            # Zustand stores
+├── hooks/            # Custom hooks
+├── utils/            # Utility functions
+└── types/            # TypeScript types
+```
+
+## Getting Started
+
+```bash
+# Clone the repo
+git clone https://github.com/noopishere/vector-mobile.git
+cd vector-mobile
+
+# Install dependencies
+npm install
+
+# Start Expo dev server
+npx expo start
+
+# Run on device/simulator
+# Press 'a' for Android, 'i' for iOS
 ```
 
 ## Roadmap
 
-- [ ] Project setup & architecture
+- [ ] Project setup (Expo + TypeScript)
+- [ ] Navigation structure
 - [ ] News feed UI
 - [ ] News API integration
 - [ ] Markets list UI
@@ -83,16 +95,6 @@ app/
 - [ ] Portfolio tracking
 - [ ] Push notifications
 - [ ] Polish & animations
-
-## Building
-
-```bash
-# Clone the repo
-git clone https://github.com/noopishere/vector-mobile.git
-
-# Open in Android Studio
-# Build and run on device/emulator
-```
 
 ## License
 
