@@ -6,6 +6,7 @@ import { colors } from '../theme/colors';
 
 import NewsScreen from '../screens/NewsScreen';
 import MarketsScreen from '../screens/MarketsScreen';
+import PortfolioScreen from '../screens/PortfolioScreen';
 import SettingsScreen from '../screens/SettingsScreen';
 
 const Tab = createBottomTabNavigator();
@@ -45,6 +46,14 @@ export const TabNavigator: React.FC = () => {
           }}
         />
         <Tab.Screen
+          name="Portfolio"
+          component={PortfolioScreen}
+          options={{
+            tabBarIcon: ({ focused }) => <TabIcon label="💼" focused={focused} />,
+            tabBarLabel: 'PORTFOLIO',
+          }}
+        />
+        <Tab.Screen
           name="Settings"
           component={SettingsScreen}
           options={{
@@ -68,7 +77,7 @@ const styles = StyleSheet.create({
   },
   tabBarLabel: {
     fontFamily: 'monospace',
-    fontSize: 10,
+    fontSize: 9,
     letterSpacing: 1,
     marginTop: 4,
   },
