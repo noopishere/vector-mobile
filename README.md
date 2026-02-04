@@ -1,121 +1,152 @@
 # Vector Mobile 📱
 
-**News & Prediction Markets App for Android**
+**News & Prediction Markets App**
 
 Mobile companion app for [vector.markets](https://vector.markets) - trade prediction markets with precision.
+
+Built with React Native + Expo for iOS, Android, and Web.
 
 ## Features
 
 ### 📰 News Feed
 - Real-time news aggregation from multiple sources
-- Categorized by market relevance (Politics, Sports, Crypto, Economics)
-- AI-powered summaries and sentiment indicators
-- Save articles for later
+- Categorized by market relevance (Tech, Finance, Crypto, Politics)
+- Sentiment indicators (bullish/bearish/neutral)
+- Pull-to-refresh for latest updates
 
 ### 📊 Prediction Markets
-- Browse active markets (powered by Kalshi)
-- Real-time odds and price charts
-- Quick trade execution
-- Portfolio tracking and P&L
+- Browse active markets with live odds
+- Category filtering (Technology, Economics, Crypto, Politics)
+- Visual probability bars with animations
+- Quick trade buttons (YES/NO)
+- Market stats (volume, liquidity, traders)
 
-### 🔔 Alerts & Notifications
-- Price movement alerts
-- Breaking news notifications
-- Market open/close reminders
-- Position updates
+### 💼 Portfolio
+- Track your positions in real-time
+- P&L display (absolute and percentage)
+- Position details (shares, avg price, current price)
+- Portfolio statistics overview
+- Win rate tracking
 
-### 👤 Profile & Settings
+### ⚙️ Settings
 - Account management
-- Trading history
-- Performance analytics
-- Theme customization (dark mode default)
+- Notification preferences
+- Data sync controls
+- Theme settings (dark mode default)
 
 ## Design
 
 Minimal, monospace aesthetic matching vector.markets:
-- Dark theme (primary)
-- Clean typography (monospace fonts)
-- High contrast for readability
-- Smooth animations
+
+- **Background**: `#0a0a0a` (near black)
+- **Surface**: `#121212` (cards, elevated surfaces)  
+- **Primary**: `#00ff88` (vibrant green accent)
+- **Secondary**: `#00aaff` (blue)
+- **Positive**: `#00ff88` (green for gains)
+- **Negative**: `#ff4444` (red for losses)
+
+Typography: Monospace fonts throughout with generous letter-spacing for labels.
 
 ## Tech Stack
 
-- **Language**: Kotlin
-- **UI**: Jetpack Compose
-- **Architecture**: MVVM + Clean Architecture
-- **Networking**: Retrofit + OkHttp
-- **Local Storage**: Room Database
-- **DI**: Hilt
-- **Async**: Coroutines + Flow
+- **Framework**: React Native + Expo SDK 54
+- **Language**: TypeScript
+- **State Management**: Zustand
+- **Data Fetching**: TanStack React Query
+- **Navigation**: React Navigation (Bottom Tabs)
+- **Styling**: StyleSheet (with NativeWind ready)
 
 ## Project Structure
 
 ```
-app/
-├── src/main/java/com/vector/mobile/
-│   ├── data/           # API clients, Room DB, repositories
-│   ├── di/             # Hilt dependency injection modules
-│   ├── domain/
-│   │   ├── model/      # Domain entities (Market, NewsArticle, Position)
-│   │   └── repository/ # Repository interfaces
-│   └── presentation/
-│       ├── ui/
-│       │   ├── components/  # Reusable UI components
-│       │   ├── navigation/  # Navigation setup
-│       │   ├── news/        # News feed screen
-│       │   ├── markets/     # Markets list screen
-│       │   ├── portfolio/   # Portfolio tracking screen
-│       │   ├── settings/    # Settings screen
-│       │   └── theme/       # Material3 dark theme
-│       └── MainActivity.kt
-└── src/main/res/       # Resources (layouts, strings, colors)
+vector-mobile/
+├── App.tsx                 # Main app entry with providers
+├── src/
+│   ├── api/
+│   │   ├── client.ts       # API client setup
+│   │   └── hooks.ts        # React Query hooks
+│   ├── components/
+│   │   ├── NewsCard.tsx    # News article card
+│   │   ├── MarketCard.tsx  # Market prediction card
+│   │   └── PositionCard.tsx # Portfolio position card
+│   ├── data/
+│   │   └── dummyData.ts    # Mock data for development
+│   ├── navigation/
+│   │   └── TabNavigator.tsx # Bottom tab navigation
+│   ├── screens/
+│   │   ├── NewsScreen.tsx
+│   │   ├── MarketsScreen.tsx
+│   │   ├── PortfolioScreen.tsx
+│   │   └── SettingsScreen.tsx
+│   ├── store/
+│   │   └── useAppStore.ts  # Zustand state store
+│   └── theme/
+│       └── colors.ts       # Design system colors
+├── app.json                # Expo config
+├── package.json
+└── tsconfig.json
 ```
 
-## Roadmap
-
-- [x] Project setup & architecture
-- [x] News feed UI
-- [ ] News API integration
-- [x] Markets list UI
-- [ ] Kalshi API integration
-- [ ] Trading functionality
-- [x] Portfolio tracking (UI)
-- [ ] Push notifications
-- [ ] Polish & animations
-
-## Building
+## Getting Started
 
 ```bash
 # Clone the repo
 git clone https://github.com/noopishere/vector-mobile.git
+cd vector-mobile
 
-# Open in Android Studio
-# Build and run on device/emulator
+# Install dependencies
+npm install
+
+# Start the development server
+npx expo start
+
+# Run on specific platform
+npx expo start --ios
+npx expo start --android
+npx expo start --web
 ```
 
 ### Requirements
 
-- Android Studio Hedgehog (2023.1.1) or later
-- JDK 17
-- Android SDK 34
-- Kotlin 1.9.21
+- Node.js 18+
+- npm or yarn
+- Expo CLI (installed via npx)
+- iOS: Xcode (for simulator)
+- Android: Android Studio (for emulator)
 
-## Design System
+## Scripts
 
-### Colors
+| Script | Description |
+|--------|-------------|
+| `npm start` | Start Expo dev server |
+| `npm run ios` | Run on iOS simulator |
+| `npm run android` | Run on Android emulator |
+| `npm run web` | Run in web browser |
 
-- **Background**: `#0A0A0B` (near black)
-- **Surface**: `#111113` (cards, elevated surfaces)
-- **Primary**: `#10B981` (emerald green)
-- **Secondary**: `#3B82F6` (blue)
-- **Positive**: `#10B981` (green for gains)
-- **Negative**: `#EF4444` (red for losses)
+## Roadmap
 
-### Typography
+- [x] Project setup with Expo + TypeScript
+- [x] Tab navigation (News, Markets, Portfolio, Settings)
+- [x] News feed with animated cards
+- [x] Markets list with filters
+- [x] Portfolio tracking screen
+- [x] Settings screen
+- [x] Loading skeletons
+- [x] Pull-to-refresh
+- [ ] Real API integration
+- [ ] User authentication
+- [ ] Push notifications
+- [ ] Trading functionality
+- [ ] Dark/light theme toggle
+- [ ] Charts and graphs
 
-- Monospace font family throughout
-- High contrast for readability
-- Letter-spacing for labels
+## Contributing
+
+1. Fork the repo
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
 
 ## License
 
