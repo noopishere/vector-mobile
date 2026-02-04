@@ -231,8 +231,8 @@ export const MarketsScreen: React.FC = () => {
     return `$${vol}`;
   };
 
-  const renderItem = ({ item }: { item: Market }) => (
-    <MarketCard market={item} onPress={() => console.log('Open market:', item.id)} />
+  const renderItem = ({ item, index }: { item: Market; index: number }) => (
+    <MarketCard market={item} index={index} onPress={() => console.log('Open market:', item.id)} />
   );
 
   const renderHeader = () => (

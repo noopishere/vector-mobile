@@ -14,17 +14,42 @@ interface MarketCardProps {
   market: Market;
   onPress?: () => void;
   compact?: boolean;
+  index?: number;
 }
 
-export const MarketCard: React.FC<MarketCardProps> = ({ market, onPress, compact = false }) => {
+export const MarketCard: React.FC<MarketCardProps> = ({ market, onPress, compact = false, index = 0 }) => {
   const scaleAnim = useRef(new Animated.Value(1)).current;
   const progressAnim = useRef(new Animated.Value(0)).current;
+  const fadeAnim = useRef(new Animated.Value(0)).current;
+  const slideAnim = useRef(new Animated.Value(40)).current;
 
   const probability = Math.round(market.probability * 100);
   const isHigh = probability >= 65;
   const isLow = probability <= 35;
   const isMid = !isHigh && !isLow;
 
+  // Entrance animation
+  useEffect(() => {
+    const delay = index * 80; // Stagger effect
+    
+    Animated.parallel([
+      Animated.timing(fadeAnim, {
+        toValue: 1,
+        duration: 350,
+        delay,
+        useNativeDriver: true,
+      }),
+      Animated.spring(slideAnim, {
+        toValue: 0,
+        tension: 60,
+        friction: 9,
+        delay,
+        useNativeDriver: true,
+      }),
+    ]).start();
+  }, [index]);
+
+  // Progress bar animation
   useEffect(() => {
     Animated.spring(progressAnim, {
       toValue: probability,
@@ -91,7 +116,13 @@ export const MarketCard: React.FC<MarketCardProps> = ({ market, onPress, compact
         style={[
           styles.container,
           compact && styles.containerCompact,
-          { transform: [{ scale: scaleAnim }] },
+          {
+            opacity: fadeAnim,
+            transform: [
+              { scale: scaleAnim },
+              { translateY: slideAnim },
+            ],
+          },
         ]}
       >
         {/* Header */}
