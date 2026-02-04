@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef, useEffect } from 'react';
 import {
   View,
   Text,
@@ -7,10 +7,15 @@ import {
   TouchableOpacity,
   Switch,
   Linking,
+  Animated,
+  Alert,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { colors, spacing } from '../theme/colors';
 import { useAppStore } from '../store/useAppStore';
+
+const ONBOARDING_COMPLETE_KEY = '@vector_onboarding_complete';
 
 interface SettingRowProps {
   label: string;
@@ -21,6 +26,7 @@ interface SettingRowProps {
   onSwitchChange?: (value: boolean) => void;
   onPress?: () => void;
   danger?: boolean;
+  index?: number;
 }
 
 const SettingRow: React.FC<SettingRowProps> = ({
@@ -32,33 +38,69 @@ const SettingRow: React.FC<SettingRowProps> = ({
   onSwitchChange,
   onPress,
   danger,
-}) => (
-  <TouchableOpacity
-    style={styles.settingRow}
-    onPress={onPress}
-    disabled={isSwitch}
-    activeOpacity={0.7}
-  >
-    <View style={styles.settingLeft}>
-      {icon && <Text style={styles.settingIcon}>{icon}</Text>}
-      <Text style={[styles.settingLabel, danger && styles.settingLabelDanger]}>
-        {label}
-      </Text>
-    </View>
-    {isSwitch ? (
-      <Switch
-        value={switchValue}
-        onValueChange={onSwitchChange}
-        trackColor={{ false: colors.surfaceElevated, true: colors.primary + '60' }}
-        thumbColor={switchValue ? colors.primary : colors.textDim}
-      />
-    ) : value ? (
-      <Text style={styles.settingValue}>{value}</Text>
-    ) : (
-      <Text style={styles.settingArrow}>→</Text>
-    )}
-  </TouchableOpacity>
-);
+  index = 0,
+}) => {
+  const scaleAnim = useRef(new Animated.Value(1)).current;
+
+  const handlePressIn = () => {
+    if (!isSwitch) {
+      Animated.spring(scaleAnim, {
+        toValue: 0.98,
+        useNativeDriver: true,
+        speed: 50,
+        bounciness: 4,
+      }).start();
+    }
+  };
+
+  const handlePressOut = () => {
+    if (!isSwitch) {
+      Animated.spring(scaleAnim, {
+        toValue: 1,
+        useNativeDriver: true,
+        speed: 50,
+        bounciness: 4,
+      }).start();
+    }
+  };
+
+  return (
+    <TouchableOpacity
+      style={styles.settingRow}
+      onPress={onPress}
+      onPressIn={handlePressIn}
+      onPressOut={handlePressOut}
+      disabled={isSwitch}
+      activeOpacity={0.9}
+    >
+      <Animated.View 
+        style={[
+          styles.settingRowInner,
+          { transform: [{ scale: scaleAnim }] }
+        ]}
+      >
+        <View style={styles.settingLeft}>
+          {icon && <Text style={styles.settingIcon}>{icon}</Text>}
+          <Text style={[styles.settingLabel, danger && styles.settingLabelDanger]}>
+            {label}
+          </Text>
+        </View>
+        {isSwitch ? (
+          <Switch
+            value={switchValue}
+            onValueChange={onSwitchChange}
+            trackColor={{ false: colors.surfaceElevated, true: colors.primary + '60' }}
+            thumbColor={switchValue ? colors.primary : colors.textDim}
+          />
+        ) : value ? (
+          <Text style={styles.settingValue}>{value}</Text>
+        ) : (
+          <Text style={styles.settingArrow}>→</Text>
+        )}
+      </Animated.View>
+    </TouchableOpacity>
+  );
+};
 
 const SectionHeader: React.FC<{ title: string }> = ({ title }) => (
   <Text style={styles.sectionTitle}>{title}</Text>
@@ -66,9 +108,41 @@ const SectionHeader: React.FC<{ title: string }> = ({ title }) => (
 
 export const SettingsScreen: React.FC = () => {
   const { settings, updateSettings } = useAppStore();
+  const headerAnim = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    Animated.spring(headerAnim, {
+      toValue: 1,
+      tension: 50,
+      friction: 8,
+      useNativeDriver: true,
+    }).start();
+  }, []);
 
   const handleOpenLink = (url: string) => {
     Linking.openURL(url).catch(() => {});
+  };
+
+  const handleResetOnboarding = async () => {
+    Alert.alert(
+      'Reset Onboarding',
+      'This will show the onboarding screen next time you open the app. Continue?',
+      [
+        { text: 'Cancel', style: 'cancel' },
+        {
+          text: 'Reset',
+          style: 'destructive',
+          onPress: async () => {
+            try {
+              await AsyncStorage.removeItem(ONBOARDING_COMPLETE_KEY);
+              Alert.alert('Done', 'Restart the app to see the onboarding.');
+            } catch (e) {
+              console.log('Error resetting onboarding:', e);
+            }
+          },
+        },
+      ]
+    );
   };
 
   return (
@@ -77,10 +151,25 @@ export const SettingsScreen: React.FC = () => {
         contentContainerStyle={styles.content}
         showsVerticalScrollIndicator={false}
       >
-        <View style={styles.header}>
+        <Animated.View 
+          style={[
+            styles.header,
+            {
+              opacity: headerAnim,
+              transform: [
+                {
+                  translateY: headerAnim.interpolate({
+                    inputRange: [0, 1],
+                    outputRange: [-20, 0],
+                  }),
+                },
+              ],
+            },
+          ]}
+        >
           <Text style={styles.logo}>VECTOR</Text>
           <Text style={styles.subtitle}>SETTINGS</Text>
-        </View>
+        </Animated.View>
 
         {/* Account Section */}
         <View style={styles.section}>
@@ -142,6 +231,11 @@ export const SettingsScreen: React.FC = () => {
               icon="📥"
               label="Download Market Data"
               onPress={() => console.log('Download data')}
+            />
+            <SettingRow
+              icon="🔄"
+              label="Reset Onboarding"
+              onPress={handleResetOnboarding}
             />
             <SettingRow
               icon="🗑️"
@@ -321,13 +415,15 @@ const styles = StyleSheet.create({
     letterSpacing: 1,
   },
   settingRow: {
+    borderBottomWidth: 1,
+    borderBottomColor: colors.border,
+  },
+  settingRowInner: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingVertical: spacing.md,
     paddingHorizontal: spacing.md,
-    borderBottomWidth: 1,
-    borderBottomColor: colors.border,
   },
   settingLeft: {
     flexDirection: 'row',
