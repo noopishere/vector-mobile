@@ -5,6 +5,7 @@ node_modules/
 .expo/
 dist/
 web-build/
+expo-env.d.ts
 
 # Native builds
 *.orig.*
@@ -26,12 +27,15 @@ yarn-error.*
 .DS_Store
 *.pem
 
-# Env
+# Local env files
+.env*.local
 .env
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
+
+# TypeScript
+*.tsbuildinfo
+
+# Testing
+coverage/
 
 # IDE
 .idea/
@@ -39,9 +43,5 @@ yarn-error.*
 *.swp
 *.swo
 
-# Testing
-coverage/
-
-# Build
-android/app/build/
-ios/build/
+# Package lock (optional - remove if you want to track it)
+package-lock.json
