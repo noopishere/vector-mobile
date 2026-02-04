@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useRef, useEffect, useState, useCallback } from 'react';
 import {
   View,
   Text,
@@ -7,6 +7,11 @@ import {
   RefreshControl,
   Animated,
   TouchableOpacity,
+  TextInput,
+  Keyboard,
+  LayoutAnimation,
+  Platform,
+  UIManager,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { colors, spacing } from '../theme/colors';
@@ -14,42 +19,138 @@ import { useMarkets } from '../api/hooks';
 import { MarketCard } from '../components/MarketCard';
 import { Market } from '../store/useAppStore';
 
+// Enable LayoutAnimation for Android
+if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental) {
+  UIManager.setLayoutAnimationEnabledExperimental(true);
+}
+
 type FilterCategory = 'ALL' | 'TECHNOLOGY' | 'ECONOMICS' | 'CRYPTO' | 'POLITICS' | 'FINANCE';
+
+const SearchBar: React.FC<{
+  value: string;
+  onChangeText: (text: string) => void;
+  onFocus?: () => void;
+  onBlur?: () => void;
+}> = ({ value, onChangeText, onFocus, onBlur }) => {
+  const scaleAnim = useRef(new Animated.Value(1)).current;
+  const glowAnim = useRef(new Animated.Value(0)).current;
+
+  const handleFocus = () => {
+    Animated.parallel([
+      Animated.spring(scaleAnim, {
+        toValue: 1.02,
+        useNativeDriver: true,
+        tension: 100,
+        friction: 8,
+      }),
+      Animated.timing(glowAnim, {
+        toValue: 1,
+        duration: 200,
+        useNativeDriver: false,
+      }),
+    ]).start();
+    onFocus?.();
+  };
+
+  const handleBlur = () => {
+    Animated.parallel([
+      Animated.spring(scaleAnim, {
+        toValue: 1,
+        useNativeDriver: true,
+        tension: 100,
+        friction: 8,
+      }),
+      Animated.timing(glowAnim, {
+        toValue: 0,
+        duration: 200,
+        useNativeDriver: false,
+      }),
+    ]).start();
+    onBlur?.();
+  };
+
+  const borderColor = glowAnim.interpolate({
+    inputRange: [0, 1],
+    outputRange: [colors.border, colors.primary + '60'],
+  });
+
+  return (
+    <Animated.View
+      style={[
+        styles.searchContainer,
+        {
+          transform: [{ scale: scaleAnim }],
+          borderColor,
+        },
+      ]}
+    >
+      <Text style={styles.searchIcon}>🔍</Text>
+      <TextInput
+        style={styles.searchInput}
+        placeholder="Search markets..."
+        placeholderTextColor={colors.textDim}
+        value={value}
+        onChangeText={onChangeText}
+        onFocus={handleFocus}
+        onBlur={handleBlur}
+        returnKeyType="search"
+        autoCorrect={false}
+        autoCapitalize="none"
+      />
+      {value.length > 0 && (
+        <TouchableOpacity
+          onPress={() => onChangeText('')}
+          style={styles.clearButton}
+          activeOpacity={0.7}
+        >
+          <Text style={styles.clearIcon}>✕</Text>
+        </TouchableOpacity>
+      )}
+    </Animated.View>
+  );
+};
 
 const CategoryFilter: React.FC<{
   categories: FilterCategory[];
   selected: FilterCategory;
   onSelect: (cat: FilterCategory) => void;
-}> = ({ categories, selected, onSelect }) => (
-  <View style={styles.filterContainer}>
-    <FlatList
-      horizontal
-      data={categories}
-      keyExtractor={(item) => item}
-      showsHorizontalScrollIndicator={false}
-      contentContainerStyle={styles.filterList}
-      renderItem={({ item }) => (
-        <TouchableOpacity
-          style={[
-            styles.filterChip,
-            selected === item && styles.filterChipActive,
-          ]}
-          onPress={() => onSelect(item)}
-          activeOpacity={0.7}
-        >
-          <Text
+}> = ({ categories, selected, onSelect }) => {
+  const handleSelect = (cat: FilterCategory) => {
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+    onSelect(cat);
+  };
+
+  return (
+    <View style={styles.filterContainer}>
+      <FlatList
+        horizontal
+        data={categories}
+        keyExtractor={(item) => item}
+        showsHorizontalScrollIndicator={false}
+        contentContainerStyle={styles.filterList}
+        renderItem={({ item }) => (
+          <TouchableOpacity
             style={[
-              styles.filterChipText,
-              selected === item && styles.filterChipTextActive,
+              styles.filterChip,
+              selected === item && styles.filterChipActive,
             ]}
+            onPress={() => handleSelect(item)}
+            activeOpacity={0.7}
           >
-            {item}
-          </Text>
-        </TouchableOpacity>
-      )}
-    />
-  </View>
-);
+            <Text
+              style={[
+                styles.filterChipText,
+                selected === item && styles.filterChipTextActive,
+              ]}
+            >
+              {item}
+            </Text>
+          </TouchableOpacity>
+        )}
+      />
+    </View>
+  );
+};
 
 const MarketCardSkeleton: React.FC = () => {
   const pulseAnim = useRef(new Animated.Value(0.3)).current;
@@ -88,12 +189,36 @@ const MarketCardSkeleton: React.FC = () => {
 export const MarketsScreen: React.FC = () => {
   const { data: markets, isLoading, refetch, isRefetching } = useMarkets();
   const [filter, setFilter] = useState<FilterCategory>('ALL');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [isSearchFocused, setIsSearchFocused] = useState(false);
+  
+  // Animated values for header
+  const headerAnim = useRef(new Animated.Value(0)).current;
+  
+  useEffect(() => {
+    Animated.spring(headerAnim, {
+      toValue: 1,
+      tension: 50,
+      friction: 8,
+      useNativeDriver: true,
+    }).start();
+  }, []);
 
   const categories: FilterCategory[] = ['ALL', 'TECHNOLOGY', 'ECONOMICS', 'CRYPTO', 'POLITICS', 'FINANCE'];
 
-  const filteredMarkets = markets?.filter(
-    (m) => filter === 'ALL' || m.category === filter
-  );
+  // Filter markets by category and search query
+  const filteredMarkets = markets?.filter((m) => {
+    const matchesCategory = filter === 'ALL' || m.category === filter;
+    const matchesSearch = searchQuery.trim() === '' || 
+      m.question.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      m.category.toLowerCase().includes(searchQuery.toLowerCase());
+    return matchesCategory && matchesSearch;
+  });
+  
+  const handleSearchChange = useCallback((text: string) => {
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+    setSearchQuery(text);
+  }, []);
 
   const totalVolume = markets?.reduce((sum, m) => sum + m.volume, 0) || 0;
   const avgProbability = markets?.length
@@ -111,7 +236,22 @@ export const MarketsScreen: React.FC = () => {
   );
 
   const renderHeader = () => (
-    <View style={styles.header}>
+    <Animated.View 
+      style={[
+        styles.header,
+        {
+          opacity: headerAnim,
+          transform: [
+            {
+              translateY: headerAnim.interpolate({
+                inputRange: [0, 1],
+                outputRange: [-20, 0],
+              }),
+            },
+          ],
+        },
+      ]}
+    >
       <View style={styles.logoRow}>
         <Text style={styles.logo}>VECTOR</Text>
         <View style={styles.updateBadge}>
@@ -119,6 +259,14 @@ export const MarketsScreen: React.FC = () => {
         </View>
       </View>
       <Text style={styles.subtitle}>PREDICTION MARKETS</Text>
+
+      {/* Search Bar */}
+      <SearchBar
+        value={searchQuery}
+        onChangeText={handleSearchChange}
+        onFocus={() => setIsSearchFocused(true)}
+        onBlur={() => setIsSearchFocused(false)}
+      />
 
       {/* Stats Overview */}
       <View style={styles.statsCard}>
@@ -148,11 +296,11 @@ export const MarketsScreen: React.FC = () => {
       {/* Section Title */}
       <View style={styles.sectionHeader}>
         <Text style={styles.sectionTitle}>
-          {filter === 'ALL' ? 'ALL MARKETS' : filter}
+          {searchQuery ? `"${searchQuery}"` : filter === 'ALL' ? 'ALL MARKETS' : filter}
         </Text>
         <Text style={styles.sectionCount}>{filteredMarkets?.length || 0}</Text>
       </View>
-    </View>
+    </Animated.View>
   );
 
   if (isLoading) {
@@ -171,6 +319,27 @@ export const MarketsScreen: React.FC = () => {
     );
   }
 
+  const renderEmpty = () => (
+    <View style={styles.emptyContainer}>
+      <Text style={styles.emptyIcon}>🔍</Text>
+      <Text style={styles.emptyTitle}>NO MARKETS FOUND</Text>
+      <Text style={styles.emptyText}>
+        {searchQuery 
+          ? `No markets matching "${searchQuery}"`
+          : 'No markets in this category'}
+      </Text>
+      {searchQuery && (
+        <TouchableOpacity
+          style={styles.clearSearchButton}
+          onPress={() => setSearchQuery('')}
+          activeOpacity={0.7}
+        >
+          <Text style={styles.clearSearchText}>Clear Search</Text>
+        </TouchableOpacity>
+      )}
+    </View>
+  );
+
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
       <FlatList
@@ -178,6 +347,7 @@ export const MarketsScreen: React.FC = () => {
         renderItem={renderItem}
         keyExtractor={(item) => item.id}
         ListHeaderComponent={renderHeader}
+        ListEmptyComponent={renderEmpty}
         contentContainerStyle={styles.listContent}
         refreshControl={
           <RefreshControl
@@ -190,6 +360,8 @@ export const MarketsScreen: React.FC = () => {
         initialNumToRender={4}
         maxToRenderPerBatch={4}
         windowSize={8}
+        keyboardShouldPersistTaps="handled"
+        onScrollBeginDrag={Keyboard.dismiss}
       />
     </SafeAreaView>
   );
@@ -242,6 +414,80 @@ const styles = StyleSheet.create({
     color: colors.textDim,
     letterSpacing: 2,
     marginTop: spacing.xs,
+  },
+  // Search Bar Styles
+  searchContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: colors.surface,
+    borderRadius: 10,
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.sm,
+    marginTop: spacing.lg,
+    borderWidth: 1,
+  },
+  searchIcon: {
+    fontSize: 14,
+    marginRight: spacing.sm,
+    opacity: 0.6,
+  },
+  searchInput: {
+    flex: 1,
+    fontFamily: 'monospace',
+    fontSize: 14,
+    color: colors.text,
+    padding: 0,
+    letterSpacing: 0.5,
+  },
+  clearButton: {
+    padding: spacing.xs,
+    marginLeft: spacing.sm,
+  },
+  clearIcon: {
+    fontSize: 12,
+    color: colors.textDim,
+  },
+  // Empty State Styles
+  emptyContainer: {
+    alignItems: 'center',
+    paddingVertical: spacing.xxl,
+    paddingHorizontal: spacing.lg,
+  },
+  emptyIcon: {
+    fontSize: 48,
+    marginBottom: spacing.md,
+    opacity: 0.5,
+  },
+  emptyTitle: {
+    fontFamily: 'monospace',
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: colors.textMuted,
+    marginBottom: spacing.sm,
+    letterSpacing: 2,
+  },
+  emptyText: {
+    fontFamily: 'monospace',
+    fontSize: 12,
+    color: colors.textDim,
+    textAlign: 'center',
+    lineHeight: 18,
+  },
+  clearSearchButton: {
+    marginTop: spacing.lg,
+    paddingHorizontal: spacing.lg,
+    paddingVertical: spacing.sm,
+    backgroundColor: colors.primary + '15',
+    borderRadius: 6,
+    borderWidth: 1,
+    borderColor: colors.primary + '30',
+  },
+  clearSearchText: {
+    fontFamily: 'monospace',
+    fontSize: 12,
+    color: colors.primary,
+    fontWeight: '600',
+    letterSpacing: 1,
   },
   statsCard: {
     flexDirection: 'row',

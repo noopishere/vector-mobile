@@ -1,8 +1,8 @@
-import React from 'react';
-import { StyleSheet, View, Text } from 'react-native';
+import React, { useRef, useEffect } from 'react';
+import { StyleSheet, View, Text, Animated } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { NavigationContainer } from '@react-navigation/native';
-import { colors } from '../theme/colors';
+import { colors, spacing } from '../theme/colors';
 
 import NewsScreen from '../screens/NewsScreen';
 import MarketsScreen from '../screens/MarketsScreen';
@@ -11,11 +11,41 @@ import SettingsScreen from '../screens/SettingsScreen';
 
 const Tab = createBottomTabNavigator();
 
-const TabIcon: React.FC<{ label: string; focused: boolean }> = ({ label, focused }) => (
-  <View style={styles.iconContainer}>
-    <Text style={[styles.icon, focused && styles.iconFocused]}>{label}</Text>
-  </View>
-);
+const TabIcon: React.FC<{ label: string; focused: boolean }> = ({ label, focused }) => {
+  const scaleAnim = useRef(new Animated.Value(1)).current;
+  const opacityAnim = useRef(new Animated.Value(focused ? 1 : 0.5)).current;
+
+  useEffect(() => {
+    Animated.parallel([
+      Animated.spring(scaleAnim, {
+        toValue: focused ? 1.15 : 1,
+        useNativeDriver: true,
+        tension: 100,
+        friction: 8,
+      }),
+      Animated.timing(opacityAnim, {
+        toValue: focused ? 1 : 0.5,
+        duration: 200,
+        useNativeDriver: true,
+      }),
+    ]).start();
+  }, [focused]);
+
+  return (
+    <Animated.View
+      style={[
+        styles.iconContainer,
+        {
+          transform: [{ scale: scaleAnim }],
+          opacity: opacityAnim,
+        },
+      ]}
+    >
+      <Text style={styles.icon}>{label}</Text>
+      {focused && <View style={styles.activeIndicator} />}
+    </Animated.View>
+  );
+};
 
 export const TabNavigator: React.FC = () => {
   return (
@@ -71,9 +101,14 @@ const styles = StyleSheet.create({
     backgroundColor: colors.surface,
     borderTopColor: colors.border,
     borderTopWidth: 1,
-    paddingTop: 8,
-    paddingBottom: 8,
-    height: 70,
+    paddingTop: spacing.sm,
+    paddingBottom: spacing.sm,
+    height: 75,
+    shadowColor: colors.primary,
+    shadowOffset: { width: 0, height: -4 },
+    shadowOpacity: 0.05,
+    shadowRadius: 8,
+    elevation: 8,
   },
   tabBarLabel: {
     fontFamily: 'monospace',
@@ -84,13 +119,20 @@ const styles = StyleSheet.create({
   iconContainer: {
     alignItems: 'center',
     justifyContent: 'center',
+    width: 44,
+    height: 44,
+    position: 'relative',
   },
   icon: {
-    fontSize: 20,
-    opacity: 0.5,
+    fontSize: 22,
   },
-  iconFocused: {
-    opacity: 1,
+  activeIndicator: {
+    position: 'absolute',
+    bottom: -4,
+    width: 4,
+    height: 4,
+    borderRadius: 2,
+    backgroundColor: colors.primary,
   },
 });
 

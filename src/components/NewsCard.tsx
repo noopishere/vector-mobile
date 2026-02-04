@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, useEffect } from 'react';
 import {
   View,
   Text,
@@ -18,6 +18,29 @@ interface NewsCardProps {
 
 export const NewsCard: React.FC<NewsCardProps> = ({ item, onPress, index = 0 }) => {
   const scaleAnim = useRef(new Animated.Value(1)).current;
+  const fadeAnim = useRef(new Animated.Value(0)).current;
+  const slideAnim = useRef(new Animated.Value(30)).current;
+
+  // Staggered entrance animation
+  useEffect(() => {
+    const delay = index * 100; // 100ms stagger between cards
+    
+    Animated.parallel([
+      Animated.timing(fadeAnim, {
+        toValue: 1,
+        duration: 400,
+        delay,
+        useNativeDriver: true,
+      }),
+      Animated.spring(slideAnim, {
+        toValue: 0,
+        tension: 50,
+        friction: 8,
+        delay,
+        useNativeDriver: true,
+      }),
+    ]).start();
+  }, [index]);
 
   const formatTime = (timestamp: string) => {
     const date = new Date(timestamp);
@@ -77,7 +100,13 @@ export const NewsCard: React.FC<NewsCardProps> = ({ item, onPress, index = 0 }) 
       <Animated.View
         style={[
           styles.container,
-          { transform: [{ scale: scaleAnim }] },
+          {
+            opacity: fadeAnim,
+            transform: [
+              { scale: scaleAnim },
+              { translateY: slideAnim },
+            ],
+          },
         ]}
       >
         {/* Category Badge & Time */}
