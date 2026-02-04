@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, useEffect } from 'react';
 import {
   View,
   Text,
@@ -12,10 +12,53 @@ import { Position } from '../store/useAppStore';
 interface PositionCardProps {
   position: Position;
   onPress?: () => void;
+  index?: number;
 }
 
-export const PositionCard: React.FC<PositionCardProps> = ({ position, onPress }) => {
+export const PositionCard: React.FC<PositionCardProps> = ({ position, onPress, index = 0 }) => {
   const scaleAnim = useRef(new Animated.Value(1)).current;
+  const fadeAnim = useRef(new Animated.Value(0)).current;
+  const slideAnim = useRef(new Animated.Value(30)).current;
+  const pnlPulseAnim = useRef(new Animated.Value(1)).current;
+
+  // Staggered entrance animation
+  useEffect(() => {
+    const delay = index * 100;
+    
+    Animated.parallel([
+      Animated.timing(fadeAnim, {
+        toValue: 1,
+        duration: 400,
+        delay,
+        useNativeDriver: true,
+      }),
+      Animated.spring(slideAnim, {
+        toValue: 0,
+        tension: 50,
+        friction: 8,
+        delay,
+        useNativeDriver: true,
+      }),
+    ]).start();
+
+    // Subtle pulse animation for P&L
+    if (position.pnl !== 0) {
+      Animated.loop(
+        Animated.sequence([
+          Animated.timing(pnlPulseAnim, {
+            toValue: 1.05,
+            duration: 1500,
+            useNativeDriver: true,
+          }),
+          Animated.timing(pnlPulseAnim, {
+            toValue: 1,
+            duration: 1500,
+            useNativeDriver: true,
+          }),
+        ])
+      ).start();
+    }
+  }, [index, position.pnl]);
 
   const isProfitable = position.pnl >= 0;
   const pnlColor = isProfitable ? colors.bullish : colors.bearish;
@@ -60,7 +103,13 @@ export const PositionCard: React.FC<PositionCardProps> = ({ position, onPress })
       <Animated.View
         style={[
           styles.container,
-          { transform: [{ scale: scaleAnim }] },
+          {
+            opacity: fadeAnim,
+            transform: [
+              { scale: scaleAnim },
+              { translateY: slideAnim },
+            ],
+          },
         ]}
       >
         {/* Header */}
@@ -76,14 +125,19 @@ export const PositionCard: React.FC<PositionCardProps> = ({ position, onPress })
               {position.outcome}
             </Text>
           </View>
-          <View style={styles.pnlContainer}>
+          <Animated.View 
+            style={[
+              styles.pnlContainer,
+              { transform: [{ scale: pnlPulseAnim }] }
+            ]}
+          >
             <Text style={[styles.pnl, { color: pnlColor }]}>
               {formatCurrency(position.pnl)}
             </Text>
             <Text style={[styles.pnlPercent, { color: pnlColor }]}>
               {formatPercent(position.pnlPercent)}
             </Text>
-          </View>
+          </Animated.View>
         </View>
 
         {/* Market Question */}

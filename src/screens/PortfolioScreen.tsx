@@ -53,8 +53,8 @@ export const PortfolioScreen: React.FC = () => {
     return `${sign}${value.toFixed(2)}%`;
   };
 
-  const renderItem = ({ item }: { item: Position }) => (
-    <PositionCard position={item} onPress={() => console.log('Open position:', item.id)} />
+  const renderItem = ({ item, index }: { item: Position; index: number }) => (
+    <PositionCard position={item} index={index} onPress={() => console.log('Open position:', item.id)} />
   );
 
   const renderHeader = () => (
