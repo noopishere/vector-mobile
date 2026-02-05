@@ -1,251 +1,97 @@
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useState, useRef } from 'react';
 import {
   View,
   Text,
   StyleSheet,
-  Animated,
   Dimensions,
   TouchableOpacity,
-  Easing,
+  Animated,
 } from 'react-native';
-import { colors, spacing } from '../theme/colors';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { colors } from '../theme/colors';
 
-const { width, height } = Dimensions.get('window');
+const { width } = Dimensions.get('window');
+
+interface OnboardingSlide {
+  id: string;
+  title: string;
+  description: string;
+  icon: string;
+}
+
+const slides: OnboardingSlide[] = [
+  {
+    id: '1',
+    title: 'Trade on Real Events',
+    description: 'Buy and sell shares on outcomes of real-world events. Politics, sports, crypto, and more.',
+    icon: '◈',
+  },
+  {
+    id: '2',
+    title: 'Real-Time Markets',
+    description: 'Access live pricing, order books, and instant execution powered by Kalshi.',
+    icon: '◉',
+  },
+  {
+    id: '3',
+    title: 'Stay Informed',
+    description: 'News feed with attached markets. See what\'s moving and why.',
+    icon: '○',
+  },
+];
 
 interface OnboardingScreenProps {
   onComplete: () => void;
 }
 
-const SplashAnimation: React.FC<{ onAnimationEnd: () => void }> = ({ onAnimationEnd }) => {
-  const logoScale = useRef(new Animated.Value(0.3)).current;
-  const logoOpacity = useRef(new Animated.Value(0)).current;
-  const glowOpacity = useRef(new Animated.Value(0)).current;
-  const lineWidth = useRef(new Animated.Value(0)).current;
-  const subtitleOpacity = useRef(new Animated.Value(0)).current;
-
-  useEffect(() => {
-    const sequence = Animated.sequence([
-      // Fade in logo
-      Animated.parallel([
-        Animated.timing(logoOpacity, {
-          toValue: 1,
-          duration: 400,
-          useNativeDriver: true,
-        }),
-        Animated.spring(logoScale, {
-          toValue: 1,
-          tension: 50,
-          friction: 7,
-          useNativeDriver: true,
-        }),
-      ]),
-      // Glow effect
-      Animated.timing(glowOpacity, {
-        toValue: 1,
-        duration: 300,
-        useNativeDriver: true,
-      }),
-      // Draw line
-      Animated.timing(lineWidth, {
-        toValue: 200,
-        duration: 400,
-        easing: Easing.out(Easing.cubic),
-        useNativeDriver: false,
-      }),
-      // Show subtitle
-      Animated.timing(subtitleOpacity, {
-        toValue: 1,
-        duration: 300,
-        useNativeDriver: true,
-      }),
-      // Brief pause
-      Animated.delay(800),
-    ]);
-
-    sequence.start(() => {
-      onAnimationEnd();
-    });
-  }, []);
-
-  return (
-    <View style={styles.splashContainer}>
-      {/* Background grid lines effect */}
-      <View style={styles.gridOverlay}>
-        {Array.from({ length: 20 }).map((_, i) => (
-          <View key={`h-${i}`} style={[styles.gridLine, styles.gridLineHorizontal, { top: i * 50 }]} />
-        ))}
-        {Array.from({ length: 10 }).map((_, i) => (
-          <View key={`v-${i}`} style={[styles.gridLine, styles.gridLineVertical, { left: i * 50 }]} />
-        ))}
-      </View>
-
-      <View style={styles.splashContent}>
-        {/* Glow behind logo */}
-        <Animated.View
-          style={[
-            styles.glow,
-            { opacity: glowOpacity },
-          ]}
-        />
-
-        {/* Logo */}
-        <Animated.Text
-          style={[
-            styles.splashLogo,
-            {
-              opacity: logoOpacity,
-              transform: [{ scale: logoScale }],
-            },
-          ]}
-        >
-          VECTOR
-        </Animated.Text>
-
-        {/* Animated line */}
-        <Animated.View style={[styles.animatedLine, { width: lineWidth }]} />
-
-        {/* Subtitle */}
-        <Animated.Text style={[styles.splashSubtitle, { opacity: subtitleOpacity }]}>
-          PREDICTION MARKETS
-        </Animated.Text>
-      </View>
-    </View>
-  );
-};
-
-const OnboardingSlide: React.FC<{
-  title: string;
-  description: string;
-  icon: string;
-  index: number;
-  currentIndex: number;
-}> = ({ title, description, icon, index, currentIndex }) => {
-  const translateX = useRef(new Animated.Value(width)).current;
-  const opacity = useRef(new Animated.Value(0)).current;
-
-  useEffect(() => {
-    if (index === currentIndex) {
-      Animated.parallel([
-        Animated.spring(translateX, {
-          toValue: 0,
-          tension: 50,
-          friction: 10,
-          useNativeDriver: true,
-        }),
-        Animated.timing(opacity, {
-          toValue: 1,
-          duration: 300,
-          useNativeDriver: true,
-        }),
-      ]).start();
-    } else if (index < currentIndex) {
-      Animated.parallel([
-        Animated.spring(translateX, {
-          toValue: -width,
-          tension: 50,
-          friction: 10,
-          useNativeDriver: true,
-        }),
-        Animated.timing(opacity, {
-          toValue: 0,
-          duration: 200,
-          useNativeDriver: true,
-        }),
-      ]).start();
-    }
-  }, [currentIndex, index]);
-
-  return (
-    <Animated.View
-      style={[
-        styles.slide,
-        {
-          transform: [{ translateX }],
-          opacity,
-        },
-      ]}
-    >
-      <View style={styles.iconContainer}>
-        <Text style={styles.icon}>{icon}</Text>
-        <View style={styles.iconGlow} />
-      </View>
-      <Text style={styles.slideTitle}>{title}</Text>
-      <Text style={styles.slideDescription}>{description}</Text>
-    </Animated.View>
-  );
-};
-
 export const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ onComplete }) => {
-  const [showSplash, setShowSplash] = useState(true);
-  const [currentSlide, setCurrentSlide] = useState(0);
-  const fadeAnim = useRef(new Animated.Value(0)).current;
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const fadeAnim = useRef(new Animated.Value(1)).current;
 
-  const slides = [
-    {
-      icon: '📊',
-      title: 'EXPLORE MARKETS',
-      description: 'Discover prediction markets across tech, economics, crypto, and politics. Make informed decisions based on crowd wisdom.',
-    },
-    {
-      icon: '📰',
-      title: 'REAL-TIME NEWS',
-      description: 'Stay updated with curated news that impacts market probabilities. Never miss a critical update.',
-    },
-    {
-      icon: '💼',
-      title: 'TRACK YOUR PORTFOLIO',
-      description: 'Monitor your positions, analyze performance, and optimize your prediction strategy.',
-    },
-  ];
-
-  useEffect(() => {
-    if (!showSplash) {
+  const goToNext = () => {
+    if (currentIndex < slides.length - 1) {
+      // Fade out
       Animated.timing(fadeAnim, {
-        toValue: 1,
-        duration: 400,
+        toValue: 0,
+        duration: 150,
         useNativeDriver: true,
-      }).start();
-    }
-  }, [showSplash]);
-
-  const handleNext = () => {
-    if (currentSlide < slides.length - 1) {
-      setCurrentSlide(currentSlide + 1);
+      }).start(() => {
+        setCurrentIndex(currentIndex + 1);
+        // Fade in
+        Animated.timing(fadeAnim, {
+          toValue: 1,
+          duration: 150,
+          useNativeDriver: true,
+        }).start();
+      });
     } else {
       onComplete();
     }
   };
 
-  const handleSkip = () => {
+  const skip = () => {
     onComplete();
   };
 
-  if (showSplash) {
-    return <SplashAnimation onAnimationEnd={() => setShowSplash(false)} />;
-  }
+  const currentSlide = slides[currentIndex];
+  const isLastSlide = currentIndex === slides.length - 1;
 
   return (
-    <Animated.View style={[styles.container, { opacity: fadeAnim }]}>
-      {/* Header */}
+    <SafeAreaView style={styles.container}>
+      {/* Skip button */}
       <View style={styles.header}>
-        <Text style={styles.logo}>VECTOR</Text>
-        {currentSlide < slides.length - 1 && (
-          <TouchableOpacity onPress={handleSkip} activeOpacity={0.7}>
-            <Text style={styles.skipText}>SKIP</Text>
-          </TouchableOpacity>
-        )}
+        <TouchableOpacity onPress={skip}>
+          <Text style={styles.skipText}>Skip</Text>
+        </TouchableOpacity>
       </View>
 
-      {/* Slides */}
-      <View style={styles.slidesContainer}>
-        {slides.map((slide, index) => (
-          <OnboardingSlide
-            key={index}
-            {...slide}
-            index={index}
-            currentIndex={currentSlide}
-          />
-        ))}
+      {/* Content */}
+      <View style={styles.content}>
+        <Animated.View style={[styles.slideContent, { opacity: fadeAnim }]}>
+          <Text style={styles.icon}>{currentSlide.icon}</Text>
+          <Text style={styles.title}>{currentSlide.title}</Text>
+          <Text style={styles.description}>{currentSlide.description}</Text>
+        </Animated.View>
       </View>
 
       {/* Pagination */}
@@ -254,217 +100,99 @@ export const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ onComplete }
           <View
             key={index}
             style={[
-              styles.paginationDot,
-              index === currentSlide && styles.paginationDotActive,
+              styles.dot,
+              index === currentIndex && styles.dotActive,
             ]}
           />
         ))}
       </View>
 
       {/* Button */}
-      <TouchableOpacity
-        style={styles.button}
-        onPress={handleNext}
-        activeOpacity={0.8}
-      >
-        <Text style={styles.buttonText}>
-          {currentSlide === slides.length - 1 ? 'GET STARTED' : 'NEXT'}
-        </Text>
-        <Text style={styles.buttonArrow}>→</Text>
-      </TouchableOpacity>
-
-      {/* Bottom decoration */}
-      <View style={styles.bottomDecoration}>
-        <View style={styles.decorLine} />
+      <View style={styles.footer}>
+        <TouchableOpacity style={styles.button} onPress={goToNext}>
+          <Text style={styles.buttonText}>
+            {isLastSlide ? 'Get Started' : 'Continue'}
+          </Text>
+        </TouchableOpacity>
       </View>
-    </Animated.View>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.background,
-    paddingHorizontal: spacing.lg,
-  },
-  splashContainer: {
-    flex: 1,
-    backgroundColor: colors.background,
-    justifyContent: 'center',
-    alignItems: 'center',
-    overflow: 'hidden',
-  },
-  gridOverlay: {
-    ...StyleSheet.absoluteFillObject,
-    opacity: 0.03,
-  },
-  gridLine: {
-    position: 'absolute',
-    backgroundColor: colors.primary,
-  },
-  gridLineHorizontal: {
-    left: 0,
-    right: 0,
-    height: 1,
-  },
-  gridLineVertical: {
-    top: 0,
-    bottom: 0,
-    width: 1,
-  },
-  splashContent: {
-    alignItems: 'center',
-  },
-  glow: {
-    position: 'absolute',
-    width: 200,
-    height: 200,
-    borderRadius: 100,
-    backgroundColor: colors.primary,
-    opacity: 0.1,
-    top: -70,
-  },
-  splashLogo: {
-    fontFamily: 'monospace',
-    fontSize: 48,
-    fontWeight: 'bold',
-    color: colors.primary,
-    letterSpacing: 12,
-  },
-  animatedLine: {
-    height: 2,
-    backgroundColor: colors.primary,
-    marginTop: spacing.md,
-    borderRadius: 1,
-  },
-  splashSubtitle: {
-    fontFamily: 'monospace',
-    fontSize: 12,
-    color: colors.textDim,
-    letterSpacing: 4,
-    marginTop: spacing.md,
+    backgroundColor: colors.black,
   },
   header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingTop: spacing.xxl + spacing.lg,
-  },
-  logo: {
-    fontFamily: 'monospace',
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: colors.primary,
-    letterSpacing: 3,
+    paddingHorizontal: 24,
+    paddingVertical: 16,
+    alignItems: 'flex-end',
   },
   skipText: {
-    fontFamily: 'monospace',
-    fontSize: 12,
-    color: colors.textDim,
-    letterSpacing: 2,
+    fontSize: 15,
+    fontFamily: 'Inter_500Medium',
+    color: colors.text.secondary,
   },
-  slidesContainer: {
+  content: {
     flex: 1,
     justifyContent: 'center',
-    position: 'relative',
-  },
-  slide: {
-    position: 'absolute',
-    left: 0,
-    right: 0,
     alignItems: 'center',
-    paddingHorizontal: spacing.md,
+    paddingHorizontal: 40,
   },
-  iconContainer: {
-    width: 120,
-    height: 120,
-    borderRadius: 30,
-    backgroundColor: colors.surface,
-    justifyContent: 'center',
+  slideContent: {
     alignItems: 'center',
-    marginBottom: spacing.xl,
-    borderWidth: 1,
-    borderColor: colors.border,
-    position: 'relative',
   },
   icon: {
-    fontSize: 48,
+    fontSize: 64,
+    color: colors.white,
+    marginBottom: 40,
   },
-  iconGlow: {
-    position: 'absolute',
-    width: 80,
-    height: 80,
-    borderRadius: 40,
-    backgroundColor: colors.primary,
-    opacity: 0.05,
-  },
-  slideTitle: {
-    fontFamily: 'monospace',
-    fontSize: 22,
-    fontWeight: 'bold',
-    color: colors.text,
-    letterSpacing: 3,
-    marginBottom: spacing.md,
+  title: {
+    fontSize: 28,
+    fontFamily: 'Inter_700Bold',
+    color: colors.white,
     textAlign: 'center',
+    marginBottom: 16,
+    letterSpacing: -0.5,
   },
-  slideDescription: {
-    fontFamily: 'monospace',
-    fontSize: 14,
-    color: colors.textMuted,
+  description: {
+    fontSize: 16,
+    fontFamily: 'Inter_400Regular',
+    color: colors.text.secondary,
+    textAlign: 'center',
     lineHeight: 24,
-    textAlign: 'center',
-    maxWidth: 300,
-    letterSpacing: 0.3,
   },
   pagination: {
     flexDirection: 'row',
     justifyContent: 'center',
-    marginBottom: spacing.xl,
-    gap: spacing.sm,
+    alignItems: 'center',
+    gap: 8,
+    paddingVertical: 24,
   },
-  paginationDot: {
+  dot: {
     width: 8,
     height: 8,
     borderRadius: 4,
-    backgroundColor: colors.border,
+    backgroundColor: colors.gray[700],
   },
-  paginationDotActive: {
+  dotActive: {
+    backgroundColor: colors.white,
     width: 24,
-    backgroundColor: colors.primary,
+  },
+  footer: {
+    paddingHorizontal: 24,
+    paddingBottom: 40,
   },
   button: {
-    flexDirection: 'row',
+    backgroundColor: colors.white,
+    paddingVertical: 18,
+    borderRadius: 12,
     alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: colors.primary,
-    paddingVertical: spacing.md,
-    paddingHorizontal: spacing.xl,
-    borderRadius: 8,
-    marginBottom: spacing.lg,
-    gap: spacing.sm,
   },
   buttonText: {
-    fontFamily: 'monospace',
-    fontSize: 14,
-    fontWeight: 'bold',
-    color: colors.background,
-    letterSpacing: 2,
-  },
-  buttonArrow: {
-    fontSize: 18,
-    color: colors.background,
-    fontWeight: 'bold',
-  },
-  bottomDecoration: {
-    alignItems: 'center',
-    paddingBottom: spacing.xxl,
-  },
-  decorLine: {
-    width: 60,
-    height: 4,
-    backgroundColor: colors.surface,
-    borderRadius: 2,
+    fontSize: 16,
+    fontFamily: 'Inter_600SemiBold',
+    color: colors.black,
   },
 });
-
-export default OnboardingScreen;

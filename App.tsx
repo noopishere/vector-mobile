@@ -1,11 +1,16 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { Animated, View, StyleSheet } from 'react-native';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { useFonts, Inter_400Regular, Inter_500Medium, Inter_600SemiBold, Inter_700Bold } from '@expo-google-fonts/inter';
+import * as SplashScreen from 'expo-splash-screen';
 import { TabNavigator } from './src/navigation/TabNavigator';
 import { OnboardingScreen } from './src/screens/OnboardingScreen';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+
+// Keep splash screen visible while loading fonts
+SplashScreen.preventAutoHideAsync();
 
 const ONBOARDING_COMPLETE_KEY = '@vector_onboarding_complete';
 
@@ -32,13 +37,11 @@ const useOnboardingState = () => {
 
   const checkOnboardingStatus = async () => {
     try {
-      // Try to use AsyncStorage if available
       const value = await AsyncStorage.getItem(ONBOARDING_COMPLETE_KEY);
       if (value === 'true') {
         setShowOnboarding(false);
       }
     } catch {
-      // Fallback to in-memory
       if (hasSeenOnboarding) {
         setShowOnboarding(false);
       }
@@ -50,7 +53,6 @@ const useOnboardingState = () => {
     try {
       await AsyncStorage.setItem(ONBOARDING_COMPLETE_KEY, 'true');
     } catch {
-      // Fallback to in-memory
       hasSeenOnboarding = true;
     }
     setShowOnboarding(false);
@@ -74,7 +76,6 @@ const TransitionWrapper: React.FC<{
     }).start(() => {
       setShowMain(true);
       onComplete();
-      // Fade in main app
       Animated.timing(fadeAnim, {
         toValue: 1,
         duration: 300,
@@ -99,13 +100,25 @@ const TransitionWrapper: React.FC<{
 };
 
 export default function App() {
-  const { isLoading, showOnboarding, completeOnboarding } = useOnboardingState();
+  const { isLoading: onboardingLoading, showOnboarding, completeOnboarding } = useOnboardingState();
+  
+  const [fontsLoaded] = useFonts({
+    Inter_400Regular,
+    Inter_500Medium,
+    Inter_600SemiBold,
+    Inter_700Bold,
+  });
 
-  if (isLoading) {
-    // Simple loading state - the splash animation handles the visual
+  const onLayoutRootView = useCallback(async () => {
+    if (fontsLoaded && !onboardingLoading) {
+      await SplashScreen.hideAsync();
+    }
+  }, [fontsLoaded, onboardingLoading]);
+
+  if (!fontsLoaded || onboardingLoading) {
     return (
       <SafeAreaProvider>
-        <StatusBar style="light" backgroundColor="#0a0a0a" />
+        <StatusBar style="light" backgroundColor="#000000" />
         <View style={styles.loadingContainer} />
       </SafeAreaProvider>
     );
@@ -114,11 +127,13 @@ export default function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <SafeAreaProvider>
-        <StatusBar style="light" backgroundColor="#0a0a0a" />
-        <TransitionWrapper
-          showOnboarding={showOnboarding}
-          onComplete={completeOnboarding}
-        />
+        <View style={styles.container} onLayout={onLayoutRootView}>
+          <StatusBar style="light" backgroundColor="#000000" />
+          <TransitionWrapper
+            showOnboarding={showOnboarding}
+            onComplete={completeOnboarding}
+          />
+        </View>
       </SafeAreaProvider>
     </QueryClientProvider>
   );
@@ -127,9 +142,10 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#000000',
   },
   loadingContainer: {
     flex: 1,
-    backgroundColor: '#0a0a0a',
+    backgroundColor: '#000000',
   },
 });

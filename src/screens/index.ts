@@ -1,5 +1,4 @@
-export { NewsScreen } from './NewsScreen';
-export { MarketsScreen } from './MarketsScreen';
-export { PortfolioScreen } from './PortfolioScreen';
-export { SettingsScreen } from './SettingsScreen';
-export { OnboardingScreen } from './OnboardingScreen';
+export * from './MarketsScreen';
+export * from './FeedScreen';
+export * from './ProfileScreen';
+export * from './OnboardingScreen';

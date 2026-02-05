@@ -1,94 +1,54 @@
-import React, { useRef, useEffect } from 'react';
-import { StyleSheet, View, Text, Animated } from 'react-native';
+import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { NavigationContainer } from '@react-navigation/native';
-import { colors, spacing } from '../theme/colors';
-
-import NewsScreen from '../screens/NewsScreen';
-import MarketsScreen from '../screens/MarketsScreen';
-import PortfolioScreen from '../screens/PortfolioScreen';
-import SettingsScreen from '../screens/SettingsScreen';
+import { View, Text, StyleSheet } from 'react-native';
+import { MarketsScreen } from '../screens/MarketsScreen';
+import { FeedScreen } from '../screens/FeedScreen';
+import { ProfileScreen } from '../screens/ProfileScreen';
+import { colors } from '../theme/colors';
 
 const Tab = createBottomTabNavigator();
 
-const TabIcon: React.FC<{ label: string; focused: boolean }> = ({ label, focused }) => {
-  const scaleAnim = useRef(new Animated.Value(1)).current;
-  const opacityAnim = useRef(new Animated.Value(focused ? 1 : 0.5)).current;
+// Simple icon components (black & white)
+const TabIcon = ({ name, focused }: { name: string; focused: boolean }) => (
+  <View style={styles.iconContainer}>
+    <Text style={[styles.icon, focused && styles.iconFocused]}>
+      {name === 'Markets' ? '◈' : name === 'Feed' ? '◉' : '○'}
+    </Text>
+  </View>
+);
 
-  useEffect(() => {
-    Animated.parallel([
-      Animated.spring(scaleAnim, {
-        toValue: focused ? 1.15 : 1,
-        useNativeDriver: true,
-        tension: 100,
-        friction: 8,
-      }),
-      Animated.timing(opacityAnim, {
-        toValue: focused ? 1 : 0.5,
-        duration: 200,
-        useNativeDriver: true,
-      }),
-    ]).start();
-  }, [focused]);
-
-  return (
-    <Animated.View
-      style={[
-        styles.iconContainer,
-        {
-          transform: [{ scale: scaleAnim }],
-          opacity: opacityAnim,
-        },
-      ]}
-    >
-      <Text style={styles.icon}>{label}</Text>
-      {focused && <View style={styles.activeIndicator} />}
-    </Animated.View>
-  );
-};
-
-export const TabNavigator: React.FC = () => {
+export const TabNavigator = () => {
   return (
     <NavigationContainer>
       <Tab.Navigator
         screenOptions={{
           headerShown: false,
           tabBarStyle: styles.tabBar,
-          tabBarActiveTintColor: colors.primary,
-          tabBarInactiveTintColor: colors.textDim,
+          tabBarActiveTintColor: colors.white,
+          tabBarInactiveTintColor: colors.gray[600],
           tabBarLabelStyle: styles.tabBarLabel,
         }}
       >
         <Tab.Screen
-          name="News"
-          component={NewsScreen}
-          options={{
-            tabBarIcon: ({ focused }) => <TabIcon label="📰" focused={focused} />,
-            tabBarLabel: 'NEWS',
-          }}
-        />
-        <Tab.Screen
           name="Markets"
           component={MarketsScreen}
           options={{
-            tabBarIcon: ({ focused }) => <TabIcon label="📊" focused={focused} />,
-            tabBarLabel: 'MARKETS',
+            tabBarIcon: ({ focused }) => <TabIcon name="Markets" focused={focused} />,
           }}
         />
         <Tab.Screen
-          name="Portfolio"
-          component={PortfolioScreen}
+          name="Feed"
+          component={FeedScreen}
           options={{
-            tabBarIcon: ({ focused }) => <TabIcon label="💼" focused={focused} />,
-            tabBarLabel: 'PORTFOLIO',
+            tabBarIcon: ({ focused }) => <TabIcon name="Feed" focused={focused} />,
           }}
         />
         <Tab.Screen
-          name="Settings"
-          component={SettingsScreen}
+          name="Profile"
+          component={ProfileScreen}
           options={{
-            tabBarIcon: ({ focused }) => <TabIcon label="⚙️" focused={focused} />,
-            tabBarLabel: 'SETTINGS',
+            tabBarIcon: ({ focused }) => <TabIcon name="Profile" focused={focused} />,
           }}
         />
       </Tab.Navigator>
@@ -98,42 +58,27 @@ export const TabNavigator: React.FC = () => {
 
 const styles = StyleSheet.create({
   tabBar: {
-    backgroundColor: colors.surface,
+    backgroundColor: colors.black,
     borderTopColor: colors.border,
     borderTopWidth: 1,
-    paddingTop: spacing.sm,
-    paddingBottom: spacing.sm,
-    height: 75,
-    shadowColor: colors.primary,
-    shadowOffset: { width: 0, height: -4 },
-    shadowOpacity: 0.05,
-    shadowRadius: 8,
-    elevation: 8,
+    height: 80,
+    paddingBottom: 20,
+    paddingTop: 10,
   },
   tabBarLabel: {
-    fontFamily: 'monospace',
-    fontSize: 9,
-    letterSpacing: 1,
-    marginTop: 4,
+    fontFamily: 'Inter_500Medium',
+    fontSize: 11,
+    letterSpacing: 0.5,
   },
   iconContainer: {
     alignItems: 'center',
     justifyContent: 'center',
-    width: 44,
-    height: 44,
-    position: 'relative',
   },
   icon: {
-    fontSize: 22,
+    fontSize: 20,
+    color: colors.gray[600],
   },
-  activeIndicator: {
-    position: 'absolute',
-    bottom: -4,
-    width: 4,
-    height: 4,
-    borderRadius: 2,
-    backgroundColor: colors.primary,
+  iconFocused: {
+    color: colors.white,
   },
 });
-
-export default TabNavigator;

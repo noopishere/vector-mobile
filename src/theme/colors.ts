@@ -1,48 +1,48 @@
-// Vector Mobile - Dark theme colors matching vector.markets aesthetic
+// Vector Mobile - Black & White Theme
+// Inspired by vector.markets
+
 export const colors = {
-  // Core backgrounds
-  background: '#0a0a0a',
-  surface: '#121212',
-  surfaceElevated: '#1a1a1a',
+  // Core
+  black: '#000000',
+  white: '#FFFFFF',
   
-  // Text
-  text: '#e0e0e0',
-  textMuted: '#888888',
-  textDim: '#555555',
+  // Grays
+  gray: {
+    50: '#FAFAFA',
+    100: '#F5F5F5',
+    200: '#E5E5E5',
+    300: '#D4D4D4',
+    400: '#A3A3A3',
+    500: '#737373',
+    600: '#525252',
+    700: '#404040',
+    800: '#262626',
+    900: '#171717',
+    950: '#0A0A0A',
+  },
   
-  // Accents
-  primary: '#00ff88',
-  primaryDim: '#00cc6a',
-  secondary: '#00aaff',
+  // Semantic
+  success: '#22C55E',
+  error: '#EF4444',
+  warning: '#F59E0B',
   
-  // Status colors
-  positive: '#00ff88',
-  negative: '#ff4444',
-  warning: '#ffaa00',
+  // Theme
+  background: '#000000',
+  surface: '#0A0A0A',
+  surfaceElevated: '#171717',
+  border: '#262626',
+  borderLight: '#404040',
   
-  // Borders
-  border: '#2a2a2a',
-  borderLight: '#333333',
+  text: {
+    primary: '#FFFFFF',
+    secondary: '#A3A3A3',
+    tertiary: '#737373',
+    inverse: '#000000',
+  },
   
-  // Markets specific
-  bullish: '#00ff88',
-  bearish: '#ff4444',
-  neutral: '#888888',
-};
+  // Accent (minimal use)
+  accent: '#FFFFFF',
+  accentMuted: '#A3A3A3',
+} as const;
 
-export const fonts = {
-  mono: 'SpaceMono',
-  monoRegular: 'SpaceMono-Regular',
-  monoBold: 'SpaceMono-Bold',
-};
-
-export const spacing = {
-  xs: 4,
-  sm: 8,
-  md: 16,
-  lg: 24,
-  xl: 32,
-  xxl: 48,
-};
-
-export default { colors, fonts, spacing };
+export type Colors = typeof colors;
