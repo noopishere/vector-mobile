@@ -9,17 +9,20 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { colors } from '../theme/colors';
 import { useAppStore, NewsItem, Market } from '../store/useAppStore';
-import { NewsCard } from '../components';
+import { NewsCard, NewsCardSkeleton } from '../components';
 
 export const FeedScreen = () => {
   const [refreshing, setRefreshing] = useState(false);
-  const { newsItems, markets } = useAppStore();
+  const { newsItems, markets, isLoading } = useAppStore();
 
   const onRefresh = () => {
     setRefreshing(true);
     // In future: fetch real data here
-    setTimeout(() => setRefreshing(false), 1000);
+    setTimeout(() => setRefreshing(false), 1500);
   };
+
+  // Show skeletons when loading or no data yet
+  const showSkeletons = isLoading || (newsItems.length === 0 && !refreshing);
 
   // Get related markets for a news item based on category matching
   const getRelatedMarkets = (news: NewsItem): Market[] => {
@@ -56,33 +59,41 @@ export const FeedScreen = () => {
         <Text style={styles.headerTitle}>Feed</Text>
       </View>
 
-      <FlatList
-        data={newsItems}
-        keyExtractor={(item) => item.id}
-        renderItem={({ item, index }) => (
-          <NewsCard
-            news={item}
-            index={index}
-            attachedMarkets={getRelatedMarkets(item)}
-            onPress={handleNewsPress}
-            onMarketPress={handleMarketPress}
-          />
-        )}
-        contentContainerStyle={styles.list}
-        showsVerticalScrollIndicator={false}
-        refreshControl={
-          <RefreshControl
-            refreshing={refreshing}
-            onRefresh={onRefresh}
-            tintColor={colors.white}
-          />
-        }
-        ListEmptyComponent={
-          <View style={styles.emptyState}>
-            <Text style={styles.emptyText}>No news available</Text>
-          </View>
-        }
-      />
+      {showSkeletons ? (
+        <View style={styles.list}>
+          {[0, 1, 2, 3].map((i) => (
+            <NewsCardSkeleton key={i} index={i} />
+          ))}
+        </View>
+      ) : (
+        <FlatList
+          data={newsItems}
+          keyExtractor={(item) => item.id}
+          renderItem={({ item, index }) => (
+            <NewsCard
+              news={item}
+              index={index}
+              attachedMarkets={getRelatedMarkets(item)}
+              onPress={handleNewsPress}
+              onMarketPress={handleMarketPress}
+            />
+          )}
+          contentContainerStyle={styles.list}
+          showsVerticalScrollIndicator={false}
+          refreshControl={
+            <RefreshControl
+              refreshing={refreshing}
+              onRefresh={onRefresh}
+              tintColor={colors.white}
+            />
+          }
+          ListEmptyComponent={
+            <View style={styles.emptyState}>
+              <Text style={styles.emptyText}>No news available</Text>
+            </View>
+          }
+        />
+      )}
     </SafeAreaView>
   );
 };
