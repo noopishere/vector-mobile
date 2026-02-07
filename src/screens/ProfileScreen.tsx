@@ -9,31 +9,7 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { colors } from '../theme/colors';
-
-interface Position {
-  id: string;
-  market: string;
-  side: 'yes' | 'no';
-  quantity: number;
-  avgPrice: number;
-  currentPrice: number;
-}
-
-// Mock data
-const mockPositions: Position[] = [
-  { id: '1', market: 'Fed rate cut by June 2026?', side: 'yes', quantity: 100, avgPrice: 58, currentPrice: 62 },
-  { id: '2', market: 'BTC above $100k by March?', side: 'yes', quantity: 250, avgPrice: 65, currentPrice: 71 },
-  { id: '3', market: 'SpaceX Mars mission by 2028?', side: 'no', quantity: 150, avgPrice: 80, currentPrice: 77 },
-];
-
-const mockStats = {
-  portfolioValue: 1247.50,
-  cashBalance: 523.40,
-  totalPnL: 189.20,
-  totalPnLPercent: 17.8,
-  winRate: 62,
-  totalTrades: 47,
-};
+import { useAppStore, Position } from '../store/useAppStore';
 
 const StatCard = ({ label, value, subValue, delay }: { 
   label: string; 
@@ -63,9 +39,7 @@ const StatCard = ({ label, value, subValue, delay }: {
 
 const PositionCard = ({ position, index }: { position: Position; index: number }) => {
   const fadeAnim = useRef(new Animated.Value(0)).current;
-  const pnl = (position.currentPrice - position.avgPrice) * position.quantity / 100;
-  const pnlPercent = ((position.currentPrice - position.avgPrice) / position.avgPrice) * 100;
-  const isProfit = pnl >= 0;
+  const isProfit = position.pnl >= 0;
 
   useEffect(() => {
     Animated.timing(fadeAnim, {
@@ -79,29 +53,29 @@ const PositionCard = ({ position, index }: { position: Position; index: number }
   return (
     <Animated.View style={[styles.positionCard, { opacity: fadeAnim }]}>
       <View style={styles.positionHeader}>
-        <Text style={styles.positionMarket} numberOfLines={1}>{position.market}</Text>
-        <View style={[styles.sideBadge, position.side === 'yes' ? styles.yesBadge : styles.noBadge]}>
-          <Text style={styles.sideText}>{position.side.toUpperCase()}</Text>
+        <Text style={styles.positionMarket} numberOfLines={1}>{position.marketQuestion}</Text>
+        <View style={[styles.sideBadge, position.outcome === 'YES' ? styles.yesBadge : styles.noBadge]}>
+          <Text style={styles.sideText}>{position.outcome}</Text>
         </View>
       </View>
       
       <View style={styles.positionDetails}>
         <View style={styles.positionCol}>
-          <Text style={styles.detailLabel}>Qty</Text>
-          <Text style={styles.detailValue}>{position.quantity}</Text>
+          <Text style={styles.detailLabel}>Shares</Text>
+          <Text style={styles.detailValue}>{position.shares}</Text>
         </View>
         <View style={styles.positionCol}>
           <Text style={styles.detailLabel}>Avg</Text>
-          <Text style={styles.detailValue}>{position.avgPrice}¢</Text>
+          <Text style={styles.detailValue}>{(position.avgPrice * 100).toFixed(0)}¢</Text>
         </View>
         <View style={styles.positionCol}>
           <Text style={styles.detailLabel}>Current</Text>
-          <Text style={styles.detailValue}>{position.currentPrice}¢</Text>
+          <Text style={styles.detailValue}>{(position.currentPrice * 100).toFixed(0)}¢</Text>
         </View>
         <View style={[styles.positionCol, styles.pnlCol]}>
           <Text style={styles.detailLabel}>P&L</Text>
           <Text style={[styles.pnlValue, isProfit ? styles.profit : styles.loss]}>
-            {isProfit ? '+' : ''}{pnlPercent.toFixed(1)}%
+            {isProfit ? '+' : ''}{position.pnlPercent.toFixed(1)}%
           </Text>
         </View>
       </View>
@@ -110,6 +84,11 @@ const PositionCard = ({ position, index }: { position: Position; index: number }
 };
 
 export const ProfileScreen = () => {
+  const { positions, portfolioStats } = useAppStore();
+  
+  // Calculate cash balance (simple estimate)
+  const cashBalance = portfolioStats.totalValue * 0.42; // ~42% cash ratio
+  
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
       <ScrollView showsVerticalScrollIndicator={false}>
@@ -124,11 +103,11 @@ export const ProfileScreen = () => {
         <View style={styles.portfolioSection}>
           <Text style={styles.portfolioLabel}>Total Value</Text>
           <Text style={styles.portfolioValue}>
-            ${mockStats.portfolioValue.toLocaleString('en-US', { minimumFractionDigits: 2 })}
+            ${portfolioStats.totalValue.toLocaleString('en-US', { minimumFractionDigits: 2 })}
           </Text>
           <View style={styles.pnlBadge}>
-            <Text style={[styles.pnlBadgeText, styles.profit]}>
-              +${mockStats.totalPnL.toFixed(2)} ({mockStats.totalPnLPercent}%)
+            <Text style={[styles.pnlBadgeText, portfolioStats.totalPnl >= 0 ? styles.profit : styles.loss]}>
+              {portfolioStats.totalPnl >= 0 ? '+' : ''}${portfolioStats.totalPnl.toFixed(2)} ({portfolioStats.totalPnlPercent.toFixed(1)}%)
             </Text>
           </View>
         </View>
@@ -137,27 +116,34 @@ export const ProfileScreen = () => {
         <View style={styles.statsGrid}>
           <StatCard 
             label="Cash" 
-            value={`$${mockStats.cashBalance.toFixed(2)}`} 
+            value={`$${cashBalance.toFixed(2)}`} 
             delay={0}
           />
           <StatCard 
             label="Win Rate" 
-            value={`${mockStats.winRate}%`} 
+            value={`${(portfolioStats.winRate * 100).toFixed(0)}%`} 
             delay={50}
           />
           <StatCard 
             label="Trades" 
-            value={mockStats.totalTrades.toString()} 
+            value={portfolioStats.totalTrades.toString()} 
             delay={100}
           />
         </View>
 
         {/* Positions */}
         <View style={styles.positionsSection}>
-          <Text style={styles.sectionTitle}>Open Positions</Text>
-          {mockPositions.map((position, index) => (
-            <PositionCard key={position.id} position={position} index={index} />
-          ))}
+          <Text style={styles.sectionTitle}>Open Positions ({positions.length})</Text>
+          {positions.length === 0 ? (
+            <View style={styles.emptyState}>
+              <Text style={styles.emptyText}>No open positions</Text>
+              <Text style={styles.emptySubtext}>Start trading to see your positions here</Text>
+            </View>
+          ) : (
+            positions.map((position, index) => (
+              <PositionCard key={position.id} position={position} index={index} />
+            ))
+          )}
         </View>
 
         {/* Actions */}
@@ -343,6 +329,25 @@ const styles = StyleSheet.create({
   },
   loss: {
     color: colors.error,
+  },
+  emptyState: {
+    padding: 32,
+    alignItems: 'center',
+    backgroundColor: colors.surface,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: colors.border,
+  },
+  emptyText: {
+    fontSize: 16,
+    fontFamily: 'Inter_600SemiBold',
+    color: colors.text.secondary,
+    marginBottom: 4,
+  },
+  emptySubtext: {
+    fontSize: 13,
+    fontFamily: 'Inter_400Regular',
+    color: colors.text.tertiary,
   },
   actionsSection: {
     flexDirection: 'row',

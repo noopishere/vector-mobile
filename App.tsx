@@ -8,6 +8,8 @@ import * as SplashScreen from 'expo-splash-screen';
 import { TabNavigator } from './src/navigation/TabNavigator';
 import { OnboardingScreen } from './src/screens/OnboardingScreen';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useAppStore } from './src/store/useAppStore';
+import { dummyNews, dummyMarkets, dummyPositions, portfolioStats } from './src/data/dummyData';
 
 // Keep splash screen visible while loading fonts
 SplashScreen.preventAutoHideAsync();
@@ -26,6 +28,18 @@ const queryClient = new QueryClient({
 
 // Simple in-memory storage fallback when AsyncStorage isn't available
 let hasSeenOnboarding = false;
+
+// Initialize store with dummy data
+const useInitializeStore = () => {
+  const { setNewsItems, setMarkets, setPositions, setPortfolioStats } = useAppStore();
+  
+  useEffect(() => {
+    setNewsItems(dummyNews);
+    setMarkets(dummyMarkets);
+    setPositions(dummyPositions);
+    setPortfolioStats(portfolioStats);
+  }, []);
+};
 
 const useOnboardingState = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -101,6 +115,9 @@ const TransitionWrapper: React.FC<{
 
 export default function App() {
   const { isLoading: onboardingLoading, showOnboarding, completeOnboarding } = useOnboardingState();
+  
+  // Initialize store with dummy data
+  useInitializeStore();
   
   const [fontsLoaded] = useFonts({
     Inter_400Regular,
