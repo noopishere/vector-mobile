@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <rect width="512" height="512" fill="#000000"/>
+  <!-- Stacked semicircles -->
+  <path d="M120,300 A136,136 0 0,1 392,300" fill="#ffffff"/>
+  <path d="M160,300 A96,96 0 0,0 352,300" fill="#000000"/>
+  <path d="M200,300 A56,56 0 0,1 312,300" fill="#606060"/>
+</svg>

@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <rect width="512" height="512" fill="#000000"/>
+  <!-- Abstract book/pages like polymarket style -->
+  <path d="M180,360 L180,152 L320,200" stroke="#ffffff" stroke-width="14" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  <path d="M180,220 L300,260" stroke="#ffffff" stroke-width="14" stroke-linecap="round"/>
+  <path d="M180,290 L280,320" stroke="#ffffff" stroke-width="14" stroke-linecap="round"/>
+</svg>

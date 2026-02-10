@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <rect width="512" height="512" fill="#0a0a0a"/>
+  <!-- Two arcs meeting - convergence/consensus -->
+  <path d="M120,380 Q256,80 392,380" fill="none" stroke="#ffffff" stroke-width="44" stroke-linecap="round"/>
+  <path d="M180,380 Q256,180 332,380" fill="none" stroke="#404040" stroke-width="44" stroke-linecap="round"/>
+</svg>

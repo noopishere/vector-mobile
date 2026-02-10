@@ -1,0 +1,7 @@
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Forking path - decision tree / prediction outcomes -->
+  <rect width="512" height="512" fill="#000"/>
+  <path d="M256 400 L256 256" stroke="#fff" stroke-width="24" fill="none" stroke-linecap="round"/>
+  <path d="M256 256 L160 128" stroke="#fff" stroke-width="24" fill="none" stroke-linecap="round"/>
+  <path d="M256 256 L352 128" stroke="#fff" stroke-width="24" fill="none" stroke-linecap="round"/>
+</svg>

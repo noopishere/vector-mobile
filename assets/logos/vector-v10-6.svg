@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <rect width="512" height="512" fill="#000000"/>
+  <!-- Abstract S curve -->
+  <path d="M150,140 Q320,140 320,256 Q320,372 150,372" fill="none" stroke="#ffffff" stroke-width="28" stroke-linecap="round"/>
+  <path d="M362,140 Q192,140 192,256 Q192,372 362,372" fill="none" stroke="#505050" stroke-width="28" stroke-linecap="round"/>
+</svg>

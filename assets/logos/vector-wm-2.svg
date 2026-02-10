@@ -1,0 +1,10 @@
+<svg width="800" height="200" viewBox="0 0 800 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="800" height="200" fill="#0a0a0a"/>
+  <!-- Icon: abstract arrow/vector -->
+  <path d="M70 130 L100 70 L130 130" stroke="#fff" stroke-width="10" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="100" cy="70" r="6" fill="#fff"/>
+  <!-- Wordmark -->
+  <text x="170" y="118" font-family="'SF Mono', 'Fira Code', monospace" font-size="44" font-weight="300" letter-spacing="2" fill="#ffffff">vector</text>
+  <text x="170" y="118" font-family="'SF Mono', 'Fira Code', monospace" font-size="44" font-weight="300" letter-spacing="2" fill="#555555" dx="168">.</text>
+  <text x="170" y="118" font-family="'SF Mono', 'Fira Code', monospace" font-size="44" font-weight="300" letter-spacing="2" fill="#555555" dx="185">markets</text>
+</svg>

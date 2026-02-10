@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="bg5" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#0d0d0d"/>
+      <stop offset="100%" style="stop-color:#000000"/>
+    </linearGradient>
+    <linearGradient id="g5" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#c0c0c0"/>
+      <stop offset="100%" style="stop-color:#f5f5f5"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" fill="url(#bg5)"/>
+  <!-- Two opposing arrows - competing outcomes -->
+  <polygon points="130,200 220,256 130,312 130,280 180,256 130,232" fill="url(#g5)"/>
+  <polygon points="382,200 292,256 382,312 382,280 332,256 382,232" fill="#2a2a2a"/>
+  <!-- Center tension point -->
+  <circle cx="256" cy="256" r="16" fill="#707070"/>
+</svg>

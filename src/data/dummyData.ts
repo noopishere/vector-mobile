@@ -1,5 +1,5 @@
 // Dummy data for Vector Mobile
-import { NewsItem, Market, Position } from '../store/useAppStore';
+import { NewsItem, Market, Position, TradeHistoryItem } from '../store/useAppStore';
 
 export const dummyNews: NewsItem[] = [
   {
@@ -259,6 +259,69 @@ export const dummyPositions: Position[] = [
     pnl: 12.00,
     pnlPercent: 8.57,
     timestamp: new Date(Date.now() - 1000 * 60 * 60 * 12).toISOString(),
+  },
+];
+
+export const dummyTradeHistory: TradeHistoryItem[] = [
+  {
+    id: 't1',
+    marketQuestion: 'Will the Fed cut rates in March 2026?',
+    outcome: 'YES',
+    action: 'BUY',
+    shares: 250,
+    price: 0.65,
+    total: 162.50,
+    timestamp: new Date(Date.now() - 1000 * 60 * 60 * 48).toISOString(),
+  },
+  {
+    id: 't2',
+    marketQuestion: 'Will Bitcoin exceed $200K in 2026?',
+    outcome: 'NO',
+    action: 'BUY',
+    shares: 500,
+    price: 0.72,
+    total: 360.00,
+    timestamp: new Date(Date.now() - 1000 * 60 * 60 * 36).toISOString(),
+  },
+  {
+    id: 't3',
+    marketQuestion: 'Will GPT-5 be released by June 2026?',
+    outcome: 'YES',
+    action: 'BUY',
+    shares: 150,
+    price: 0.52,
+    total: 78.00,
+    timestamp: new Date(Date.now() - 1000 * 60 * 60 * 72).toISOString(),
+  },
+  {
+    id: 't4',
+    marketQuestion: 'Will Ethereum ETF be approved in 2026?',
+    outcome: 'YES',
+    action: 'SELL',
+    shares: 100,
+    price: 0.74,
+    total: 74.00,
+    timestamp: new Date(Date.now() - 1000 * 60 * 60 * 18).toISOString(),
+  },
+  {
+    id: 't5',
+    marketQuestion: 'Will Tesla Robotaxi launch in 2026?',
+    outcome: 'YES',
+    action: 'BUY',
+    shares: 300,
+    price: 0.38,
+    total: 114.00,
+    timestamp: new Date(Date.now() - 1000 * 60 * 60 * 96).toISOString(),
+  },
+  {
+    id: 't6',
+    marketQuestion: 'Will US inflation fall below 2% by Q4?',
+    outcome: 'NO',
+    action: 'SELL',
+    shares: 200,
+    price: 0.60,
+    total: 120.00,
+    timestamp: new Date(Date.now() - 1000 * 60 * 60 * 120).toISOString(),
   },
 ];
 

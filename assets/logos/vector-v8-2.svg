@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <rect width="512" height="512" fill="#000000"/>
+  <!-- Brackets with ring inside -->
+  <path d="M165,140 L125,140 L125,372 L165,372" stroke="#ffffff" stroke-width="12" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  <path d="M347,140 L387,140 L387,372 L347,372" stroke="#ffffff" stroke-width="12" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  <circle cx="256" cy="256" r="50" stroke="#ffffff" stroke-width="12" fill="none"/>
+</svg>

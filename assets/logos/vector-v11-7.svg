@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <rect width="512" height="512" fill="#000000"/>
+  <!-- Stylized question mark -->
+  <path d="M200,180 Q200,120 256,120 Q340,120 340,200 Q340,260 256,280 L256,320" fill="none" stroke="#ffffff" stroke-width="28" stroke-linecap="round"/>
+  <circle cx="256" cy="390" r="20" fill="#ffffff"/>
+</svg>

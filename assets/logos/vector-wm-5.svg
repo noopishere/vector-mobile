@@ -1,0 +1,8 @@
+<svg width="800" height="200" viewBox="0 0 800 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="800" height="200" fill="#0a0a0a"/>
+  <!-- Icon: diamond -->
+  <path d="M100 55 L140 100 L100 145 L60 100 Z" stroke="#fff" stroke-width="7" fill="none" stroke-linejoin="round"/>
+  <!-- Wordmark -->
+  <text x="180" y="118" font-family="monospace" font-size="46" font-weight="400" fill="#fff">vector</text>
+  <text x="180" y="118" font-family="monospace" font-size="46" font-weight="400" fill="#4a4a4a" dx="168">.markets</text>
+</svg>

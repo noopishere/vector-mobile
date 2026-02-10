@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <rect width="512" height="512" fill="#000000"/>
+  <!-- Three bars ascending -->
+  <rect x="130" y="280" width="70" height="120" rx="8" fill="#404040"/>
+  <rect x="221" y="200" width="70" height="200" rx="8" fill="#808080"/>
+  <rect x="312" y="112" width="70" height="288" rx="8" fill="#ffffff"/>
+</svg>

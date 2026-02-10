@@ -1,0 +1,7 @@
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Abstract V with momentum lines -->
+  <rect width="512" height="512" fill="#000"/>
+  <path d="M120 128 L256 384 L392 128" stroke="#fff" stroke-width="28" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  <line x1="180" y1="128" x2="256" y2="280" stroke="#fff" stroke-width="8" opacity="0.3" stroke-linecap="round"/>
+  <line x1="332" y1="128" x2="256" y2="280" stroke="#fff" stroke-width="8" opacity="0.3" stroke-linecap="round"/>
+</svg>

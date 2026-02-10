@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { colors } from '../theme/colors';
-import { useAppStore, Position } from '../store/useAppStore';
+import { useAppStore, Position, TradeHistoryItem } from '../store/useAppStore';
 
 const StatCard = ({ label, value, subValue, delay }: { 
   label: string; 
@@ -83,8 +83,52 @@ const PositionCard = ({ position, index }: { position: Position; index: number }
   );
 };
 
+const TradeCard = ({ trade, index }: { trade: TradeHistoryItem; index: number }) => {
+  const fadeAnim = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    Animated.timing(fadeAnim, {
+      toValue: 1,
+      duration: 400,
+      delay: 300 + index * 60,
+      useNativeDriver: true,
+    }).start();
+  }, []);
+
+  const formatTime = (timestamp: string) => {
+    const date = new Date(timestamp);
+    const now = new Date();
+    const diffMs = now.getTime() - date.getTime();
+    const diffHours = Math.floor(diffMs / 3600000);
+    const diffDays = Math.floor(diffMs / 86400000);
+    if (diffHours < 24) return `${diffHours}h ago`;
+    return `${diffDays}d ago`;
+  };
+
+  return (
+    <Animated.View style={[styles.tradeCard, { opacity: fadeAnim }]}>
+      <View style={styles.tradeHeader}>
+        <Text style={styles.tradeMarket} numberOfLines={1}>{trade.marketQuestion}</Text>
+        <View style={styles.tradeActionRow}>
+          <View style={[styles.actionBadge, trade.action === 'BUY' ? styles.buyBadge : styles.sellBadge]}>
+            <Text style={styles.actionText}>{trade.action}</Text>
+          </View>
+          <View style={[styles.sideBadge, trade.outcome === 'YES' ? styles.yesBadge : styles.noBadge]}>
+            <Text style={styles.sideText}>{trade.outcome}</Text>
+          </View>
+        </View>
+      </View>
+      <View style={styles.tradeDetails}>
+        <Text style={styles.tradeDetail}>{trade.shares} shares @ {(trade.price * 100).toFixed(0)}¢</Text>
+        <Text style={styles.tradeDetail}>${trade.total.toFixed(2)}</Text>
+      </View>
+      <Text style={styles.tradeTime}>{formatTime(trade.timestamp)}</Text>
+    </Animated.View>
+  );
+};
+
 export const ProfileScreen = () => {
-  const { positions, portfolioStats } = useAppStore();
+  const { positions, portfolioStats, tradeHistory } = useAppStore();
   
   // Calculate cash balance (simple estimate)
   const cashBalance = portfolioStats.totalValue * 0.42; // ~42% cash ratio
@@ -142,6 +186,20 @@ export const ProfileScreen = () => {
           ) : (
             positions.map((position, index) => (
               <PositionCard key={position.id} position={position} index={index} />
+            ))
+          )}
+        </View>
+
+        {/* Trade History */}
+        <View style={styles.positionsSection}>
+          <Text style={styles.sectionTitle}>Trade History ({tradeHistory.length})</Text>
+          {tradeHistory.length === 0 ? (
+            <View style={styles.emptyState}>
+              <Text style={styles.emptyText}>No trade history</Text>
+            </View>
+          ) : (
+            tradeHistory.map((trade, index) => (
+              <TradeCard key={trade.id} trade={trade} index={index} />
             ))
           )}
         </View>
@@ -374,5 +432,62 @@ const styles = StyleSheet.create({
   },
   actionTextOutline: {
     color: colors.white,
+  },
+  tradeCard: {
+    backgroundColor: colors.surface,
+    borderRadius: 12,
+    padding: 14,
+    marginBottom: 10,
+    borderWidth: 1,
+    borderColor: colors.border,
+  },
+  tradeHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 8,
+  },
+  tradeMarket: {
+    flex: 1,
+    fontSize: 14,
+    fontFamily: 'Inter_600SemiBold',
+    color: colors.white,
+    marginRight: 8,
+  },
+  tradeActionRow: {
+    flexDirection: 'row',
+    gap: 6,
+  },
+  actionBadge: {
+    paddingHorizontal: 8,
+    paddingVertical: 3,
+    borderRadius: 4,
+  },
+  buyBadge: {
+    backgroundColor: 'rgba(34,197,94,0.15)',
+  },
+  sellBadge: {
+    backgroundColor: 'rgba(239,68,68,0.15)',
+  },
+  actionText: {
+    fontSize: 10,
+    fontFamily: 'Inter_700Bold',
+    color: colors.white,
+    letterSpacing: 0.5,
+  },
+  tradeDetails: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  tradeDetail: {
+    fontSize: 13,
+    fontFamily: 'Inter_400Regular',
+    color: colors.text.secondary,
+  },
+  tradeTime: {
+    fontSize: 11,
+    fontFamily: 'Inter_400Regular',
+    color: colors.text.tertiary,
+    marginTop: 6,
   },
 });

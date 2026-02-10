@@ -10,10 +10,12 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { colors } from '../theme/colors';
 import { useAppStore, NewsItem, Market } from '../store/useAppStore';
 import { NewsCard, NewsCardSkeleton } from '../components';
+import { useNavigation } from '@react-navigation/native';
 
 export const FeedScreen = () => {
   const [refreshing, setRefreshing] = useState(false);
   const { newsItems, markets, isLoading } = useAppStore();
+  const navigation = useNavigation<any>();
 
   const onRefresh = () => {
     setRefreshing(true);
@@ -44,13 +46,11 @@ export const FeedScreen = () => {
   };
 
   const handleNewsPress = (news: NewsItem) => {
-    // TODO: Navigate to news detail
-    console.log('News pressed:', news.id);
+    navigation.navigate('NewsDetail', { newsId: news.id });
   };
 
   const handleMarketPress = (market: Market) => {
-    // TODO: Navigate to market detail
-    console.log('Market pressed:', market.id);
+    navigation.navigate('MarketDetail', { marketId: market.id });
   };
 
   return (

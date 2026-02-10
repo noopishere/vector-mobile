@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="bg2" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1a1a1a"/>
+      <stop offset="100%" style="stop-color:#000000"/>
+    </linearGradient>
+    <linearGradient id="vGrad2" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#ffffff"/>
+      <stop offset="50%" style="stop-color:#c0c0c0"/>
+      <stop offset="100%" style="stop-color:#606060"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" fill="url(#bg2)"/>
+  <!-- Sharp geometric V with depth -->
+  <polygon points="256,100 120,412 170,412 256,180 342,412 392,412" fill="url(#vGrad2)"/>
+  <!-- Shadow layer -->
+  <polygon points="270,130 400,412 392,412 262,145" fill="#404040" opacity="0.6"/>
+</svg>

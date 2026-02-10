@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <rect width="512" height="512" fill="#000000"/>
+  <!-- Circle with slice removed -->
+  <path d="M256,96 A160,160 0 1,1 150,372 L256,256 Z" fill="#ffffff"/>
+</svg>

@@ -1,0 +1,8 @@
+<svg width="800" height="200" viewBox="0 0 800 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="800" height="200" fill="#0a0a0a"/>
+  <!-- Icon: minimal V mark -->
+  <path d="M55 65 L100 135 L145 65" stroke="#fff" stroke-width="10" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- Wordmark -->
+  <text x="180" y="118" font-family="monospace" font-size="46" font-weight="400" letter-spacing="0.5" fill="#fff">vector</text>
+  <text x="180" y="118" font-family="monospace" font-size="46" font-weight="400" letter-spacing="0.5" fill="#4a4a4a" dx="168">.markets</text>
+</svg>

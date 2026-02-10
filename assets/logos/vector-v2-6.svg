@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <radialGradient id="bg6" cx="50%" cy="50%" r="70%">
+      <stop offset="0%" style="stop-color:#1a1a1a"/>
+      <stop offset="100%" style="stop-color:#000000"/>
+    </radialGradient>
+    <linearGradient id="bar6" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#d0d0d0"/>
+      <stop offset="100%" style="stop-color:#707070"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" fill="url(#bg6)"/>
+  <!-- Abstract ascending bars suggesting market/vector -->
+  <rect x="120" y="320" width="50" height="112" rx="4" fill="#303030"/>
+  <rect x="190" y="260" width="50" height="172" rx="4" fill="#454545"/>
+  <rect x="260" y="180" width="50" height="252" rx="4" fill="url(#bar6)"/>
+  <rect x="330" y="220" width="50" height="212" rx="4" fill="#555555"/>
+  <rect x="400" y="280" width="50" height="152" rx="4" fill="#383838"/>
+  <!-- Connecting vector line -->
+  <path d="M145 310 L215 250 L285 170 L355 210 L425 270" fill="none" stroke="#ffffff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="0.8"/>
+</svg>

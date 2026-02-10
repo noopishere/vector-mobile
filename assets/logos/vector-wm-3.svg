@@ -1,0 +1,8 @@
+<svg width="800" height="200" viewBox="0 0 800 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="800" height="200" fill="#0a0a0a"/>
+  <!-- Icon: Y fork / decision tree -->
+  <path d="M100 140 L100 100 M100 100 L70 60 M100 100 L130 60" stroke="#fff" stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- Wordmark -->
+  <text x="170" y="118" font-family="monospace" font-size="46" font-weight="400" letter-spacing="1" fill="#e8e8e8">vector</text>
+  <text x="170" y="118" font-family="monospace" font-size="46" font-weight="400" letter-spacing="1" fill="#505050" dx="170">.markets</text>
+</svg>

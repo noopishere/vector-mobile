@@ -48,6 +48,17 @@ export interface PortfolioStats {
   activePositions: number;
 }
 
+export interface TradeHistoryItem {
+  id: string;
+  marketQuestion: string;
+  outcome: 'YES' | 'NO';
+  action: 'BUY' | 'SELL';
+  shares: number;
+  price: number;
+  total: number;
+  timestamp: string;
+}
+
 interface AppState {
   // News
   newsItems: NewsItem[];
@@ -63,6 +74,14 @@ interface AppState {
   portfolioStats: PortfolioStats;
   setPortfolioStats: (stats: PortfolioStats) => void;
   
+  // Watchlist
+  watchlist: string[];
+  toggleWatchlist: (marketId: string) => void;
+
+  // Trade History
+  tradeHistory: TradeHistoryItem[];
+  setTradeHistory: (history: TradeHistoryItem[]) => void;
+
   // UI State
   isLoading: boolean;
   setIsLoading: (loading: boolean) => void;
@@ -100,6 +119,19 @@ export const useAppStore = create<AppState>((set) => ({
     activePositions: 0,
   },
   setPortfolioStats: (stats) => set({ portfolioStats: stats }),
+
+  // Watchlist
+  watchlist: [],
+  toggleWatchlist: (marketId) =>
+    set((state) => ({
+      watchlist: state.watchlist.includes(marketId)
+        ? state.watchlist.filter((id) => id !== marketId)
+        : [...state.watchlist, marketId],
+    })),
+
+  // Trade History
+  tradeHistory: [],
+  setTradeHistory: (history) => set({ tradeHistory: history }),
   
   // UI State
   isLoading: false,

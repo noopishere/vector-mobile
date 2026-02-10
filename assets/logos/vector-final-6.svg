@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="g6" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#3b82f6"/>
+      <stop offset="100%" style="stop-color:#1d4ed8"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="100" fill="#030712"/>
+  <!-- Radar scan - looking into the future -->
+  <circle cx="256" cy="256" r="150" fill="none" stroke="#1e3a5f" stroke-width="4"/>
+  <circle cx="256" cy="256" r="100" fill="none" stroke="#1e3a5f" stroke-width="3"/>
+  <circle cx="256" cy="256" r="50" fill="none" stroke="#1e3a5f" stroke-width="2"/>
+  <path d="M256,256 L256,106" stroke="#3b82f6" stroke-width="8" stroke-linecap="round"/>
+  <path d="M256,256 L360,180" stroke="url(#g6)" stroke-width="8" stroke-linecap="round"/>
+  <circle cx="360" cy="180" r="12" fill="#60a5fa"/>
+  <circle cx="200" cy="320" r="8" fill="#2563eb"/>
+</svg>

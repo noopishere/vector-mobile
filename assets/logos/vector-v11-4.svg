@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <rect width="512" height="512" fill="#000000"/>
+  <!-- Compass needle - direction/prediction -->
+  <polygon points="256,100 290,256 256,290 222,256" fill="#ffffff"/>
+  <polygon points="256,412 290,256 256,222 222,256" fill="#505050"/>
+  <circle cx="256" cy="256" r="24" fill="none" stroke="#ffffff" stroke-width="8"/>
+</svg>

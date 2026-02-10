@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <rect width="512" height="512" fill="#000000"/>
+  <!-- Lightning bolt - speed/insight -->
+  <polygon points="280,80 180,240 250,240 210,432 340,220 260,220 320,80" fill="#ffffff"/>
+</svg>

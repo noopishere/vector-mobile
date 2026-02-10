@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="bg6" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#0a0a0a"/>
+      <stop offset="100%" style="stop-color:#000000"/>
+    </linearGradient>
+    <linearGradient id="g6" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#e0e0e0"/>
+      <stop offset="100%" style="stop-color:#505050"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" fill="url(#bg6)"/>
+  <!-- Hourglass - time/prediction -->
+  <polygon points="160,120 352,120 280,256 352,392 160,392 232,256" fill="none" stroke="url(#g6)" stroke-width="12" stroke-linejoin="round"/>
+  <polygon points="190,145 322,145 270,240 242,240" fill="#303030"/>
+  <polygon points="190,367 322,367 270,280 242,280" fill="#1a1a1a"/>
+</svg>

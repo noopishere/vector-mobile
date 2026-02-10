@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <!-- Ultra minimal - single line V with dot -->
+  <rect width="512" height="512" fill="#000000"/>
+  <!-- Clean V -->
+  <path d="M120 140 L256 372 L392 140" fill="none" stroke="#ffffff" stroke-width="24" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

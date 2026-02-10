@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <rect width="512" height="512" fill="#000000"/>
+  <!-- Rounded triangle pointing up -->
+  <path d="M256,100 L400,380 Q405,395 390,395 L122,395 Q107,395 112,380 Z" fill="#ffffff"/>
+</svg>

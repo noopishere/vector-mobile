@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <rect width="512" height="512" fill="#000000"/>
+  <!-- Flag/marker - position -->
+  <rect x="160" y="100" width="16" height="320" rx="8" fill="#505050"/>
+  <path d="M176,100 L360,160 L176,240 Z" fill="#ffffff"/>
+</svg>

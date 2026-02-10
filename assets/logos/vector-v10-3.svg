@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <rect width="512" height="512" fill="#000000"/>
+  <!-- Rounded square with corner cut -->
+  <path d="M140,120 L320,120 L392,192 L392,392 L120,392 L120,140 Q120,120 140,120" fill="#ffffff"/>
+</svg>

@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <rect width="512" height="512" fill="#000000"/>
+  <!-- Double brackets -->
+  <path d="M175,140 L135,140 L135,372 L175,372" stroke="#ffffff" stroke-width="10" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  <path d="M215,170 L185,170 L185,342 L215,342" stroke="#606060" stroke-width="10" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  <path d="M337,140 L377,140 L377,372 L337,372" stroke="#ffffff" stroke-width="10" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  <path d="M297,170 L327,170 L327,342 L297,342" stroke="#606060" stroke-width="10" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  <circle cx="256" cy="256" r="18" fill="#ffffff"/>
+</svg>

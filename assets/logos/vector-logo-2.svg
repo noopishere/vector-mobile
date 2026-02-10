@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <!-- Geometric abstract - intersecting planes -->
+  <defs>
+    <linearGradient id="grad2a" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#10b981;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#059669;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="grad2b" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#ffffff;stop-opacity:0.9" />
+      <stop offset="100%" style="stop-color:#e5e5e5;stop-opacity:0.9" />
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" fill="#0f0f0f"/>
+  <!-- Main geometric V -->
+  <polygon points="256,80 128,432 180,432 256,200 332,432 384,432" fill="url(#grad2b)"/>
+  <!-- Accent slash -->
+  <polygon points="300,160 420,400 370,400 250,160" fill="url(#grad2a)"/>
+</svg>

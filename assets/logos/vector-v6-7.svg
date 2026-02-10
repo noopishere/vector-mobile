@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="bg7" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#0b0b0b"/>
+      <stop offset="100%" style="stop-color:#000000"/>
+    </linearGradient>
+    <linearGradient id="g7" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#f0f0f0"/>
+      <stop offset="100%" style="stop-color:#808080"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" fill="url(#bg7)"/>
+  <!-- Binary tree - decision branches -->
+  <circle cx="256" cy="120" r="28" fill="url(#g7)"/>
+  <line x1="256" y1="148" x2="160" y2="220" stroke="#505050" stroke-width="8"/>
+  <line x1="256" y1="148" x2="352" y2="220" stroke="#505050" stroke-width="8"/>
+  <circle cx="160" cy="240" r="24" fill="#404040"/>
+  <circle cx="352" cy="240" r="24" fill="#606060"/>
+  <line x1="160" y1="264" x2="110" y2="340" stroke="#303030" stroke-width="6"/>
+  <line x1="160" y1="264" x2="210" y2="340" stroke="#303030" stroke-width="6"/>
+  <line x1="352" y1="264" x2="302" y2="340" stroke="#303030" stroke-width="6"/>
+  <line x1="352" y1="264" x2="402" y2="340" stroke="#303030" stroke-width="6"/>
+  <circle cx="110" cy="360" r="18" fill="#252525"/>
+  <circle cx="210" cy="360" r="18" fill="#252525"/>
+  <circle cx="302" cy="360" r="18" fill="#353535"/>
+  <circle cx="402" cy="360" r="18" fill="#c0c0c0"/>
+</svg>

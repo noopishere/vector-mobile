@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="bg6" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#0a0a0a"/>
+      <stop offset="100%" style="stop-color:#000000"/>
+    </linearGradient>
+    <linearGradient id="grad6" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#e0e0e0"/>
+      <stop offset="100%" style="stop-color:#505050"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" fill="url(#bg6)"/>
+  <!-- Abstract crossroads / decision point -->
+  <circle cx="256" cy="256" r="140" fill="none" stroke="#202020" stroke-width="40"/>
+  <circle cx="256" cy="256" r="140" fill="none" stroke="url(#grad6)" stroke-width="40" stroke-dasharray="220 660" stroke-dashoffset="0"/>
+  <circle cx="256" cy="116" r="16" fill="#ffffff"/>
+</svg>

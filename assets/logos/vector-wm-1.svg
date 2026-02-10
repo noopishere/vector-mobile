@@ -1,0 +1,9 @@
+<svg width="800" height="200" viewBox="0 0 800 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="800" height="200" fill="#0a0a0a"/>
+  <!-- Icon: converging lines -->
+  <path d="M60 140 L100 60 L140 140" stroke="#fff" stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- Wordmark -->
+  <text x="180" y="118" font-family="monospace" font-size="48" font-weight="400" fill="#ffffff">vector</text>
+  <text x="180" y="118" font-family="monospace" font-size="48" font-weight="400" fill="#666666" dx="175">.</text>
+  <text x="180" y="118" font-family="monospace" font-size="48" font-weight="400" fill="#666666" dx="195">markets</text>
+</svg>

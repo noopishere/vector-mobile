@@ -1,7 +1,7 @@
 import React, { useRef, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Animated } from 'react-native';
 import { colors } from '../theme/colors';
-import { Market } from '../store/useAppStore';
+import { Market, useAppStore } from '../store/useAppStore';
 
 interface MarketCardProps {
   market: Market;
@@ -42,6 +42,9 @@ export const MarketCard: React.FC<MarketCardProps> = ({
     return `$${vol}`;
   };
 
+  const { watchlist, toggleWatchlist } = useAppStore();
+  const isWatched = watchlist.includes(market.id);
+
   const yesPrice = Math.round(market.probability * 100);
   const noPrice = 100 - yesPrice;
 
@@ -75,9 +78,20 @@ export const MarketCard: React.FC<MarketCardProps> = ({
       <TouchableOpacity activeOpacity={0.7} onPress={() => onPress?.(market)}>
         <View style={styles.header}>
           <Text style={styles.category}>{market.category}</Text>
-          {market.endDate && (
-            <Text style={styles.closes}>Closes {market.endDate}</Text>
-          )}
+          <View style={styles.headerRight}>
+            <TouchableOpacity
+              onPress={(e) => {
+                e.stopPropagation?.();
+                toggleWatchlist(market.id);
+              }}
+              hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+            >
+              <Text style={styles.starIcon}>{isWatched ? '★' : '☆'}</Text>
+            </TouchableOpacity>
+            {market.endDate && (
+              <Text style={styles.closes}>Closes {market.endDate}</Text>
+            )}
+          </View>
         </View>
         
         <Text style={styles.title}>{market.question}</Text>
@@ -131,6 +145,15 @@ const styles = StyleSheet.create({
     color: colors.text.tertiary,
     textTransform: 'uppercase',
     letterSpacing: 1,
+  },
+  headerRight: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+  },
+  starIcon: {
+    fontSize: 18,
+    color: colors.white,
   },
   closes: {
     fontSize: 11,

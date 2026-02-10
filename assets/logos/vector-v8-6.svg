@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <rect width="512" height="512" fill="#000000"/>
+  <!-- Brackets with vertical line -->
+  <path d="M155,140 L115,140 L115,372 L155,372" stroke="#ffffff" stroke-width="12" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  <path d="M357,140 L397,140 L397,372 L357,372" stroke="#ffffff" stroke-width="12" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  <line x1="256" y1="180" x2="256" y2="332" stroke="#ffffff" stroke-width="14" stroke-linecap="round"/>
+</svg>

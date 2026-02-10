@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <!-- Minimal grid with V highlight -->
+  <rect width="512" height="512" fill="#0c0c0c"/>
+  <!-- Subtle grid -->
+  <g stroke="#ffffff" stroke-opacity="0.06" stroke-width="1">
+    <line x1="128" y1="0" x2="128" y2="512"/>
+    <line x1="256" y1="0" x2="256" y2="512"/>
+    <line x1="384" y1="0" x2="384" y2="512"/>
+    <line x1="0" y1="128" x2="512" y2="128"/>
+    <line x1="0" y1="256" x2="512" y2="256"/>
+    <line x1="0" y1="384" x2="512" y2="384"/>
+  </g>
+  <!-- Bold V intersecting grid -->
+  <path d="M128 128 L256 384 L384 128" fill="none" stroke="#ffffff" stroke-width="20" stroke-linecap="square" stroke-linejoin="miter"/>
+  <!-- Node points -->
+  <circle cx="128" cy="128" r="10" fill="#22c55e"/>
+  <circle cx="256" cy="384" r="10" fill="#22c55e"/>
+  <circle cx="384" cy="128" r="10" fill="#22c55e"/>
+</svg>

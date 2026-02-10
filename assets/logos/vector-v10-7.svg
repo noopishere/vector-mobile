@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <rect width="512" height="512" fill="#000000"/>
+  <!-- Diamond with inner diamond (negative space) -->
+  <polygon points="256,80 432,256 256,432 80,256" fill="#ffffff"/>
+  <polygon points="256,160 352,256 256,352 160,256" fill="#000000"/>
+</svg>

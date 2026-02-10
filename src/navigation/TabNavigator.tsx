@@ -1,13 +1,19 @@
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { NavigationContainer } from '@react-navigation/native';
 import { View, Text, StyleSheet } from 'react-native';
 import { MarketsScreen } from '../screens/MarketsScreen';
 import { FeedScreen } from '../screens/FeedScreen';
 import { ProfileScreen } from '../screens/ProfileScreen';
+import { MarketDetailScreen } from '../screens/MarketDetailScreen';
+import { NewsDetailScreen } from '../screens/NewsDetailScreen';
 import { colors } from '../theme/colors';
 
 const Tab = createBottomTabNavigator();
+const MarketsStack = createNativeStackNavigator();
+const FeedStack = createNativeStackNavigator();
+const ProfileStack = createNativeStackNavigator();
 
 // Simple icon components (black & white)
 const TabIcon = ({ name, focused }: { name: string; focused: boolean }) => (
@@ -16,6 +22,29 @@ const TabIcon = ({ name, focused }: { name: string; focused: boolean }) => (
       {name === 'Markets' ? '◈' : name === 'Feed' ? '◉' : '○'}
     </Text>
   </View>
+);
+
+const MarketsStackScreen = () => (
+  <MarketsStack.Navigator screenOptions={{ headerShown: false }}>
+    <MarketsStack.Screen name="MarketsHome" component={MarketsScreen} />
+    <MarketsStack.Screen name="MarketDetail" component={MarketDetailScreen} />
+    <MarketsStack.Screen name="NewsDetail" component={NewsDetailScreen} />
+  </MarketsStack.Navigator>
+);
+
+const FeedStackScreen = () => (
+  <FeedStack.Navigator screenOptions={{ headerShown: false }}>
+    <FeedStack.Screen name="FeedHome" component={FeedScreen} />
+    <FeedStack.Screen name="NewsDetail" component={NewsDetailScreen} />
+    <FeedStack.Screen name="MarketDetail" component={MarketDetailScreen} />
+  </FeedStack.Navigator>
+);
+
+const ProfileStackScreen = () => (
+  <ProfileStack.Navigator screenOptions={{ headerShown: false }}>
+    <ProfileStack.Screen name="ProfileHome" component={ProfileScreen} />
+    <ProfileStack.Screen name="MarketDetail" component={MarketDetailScreen} />
+  </ProfileStack.Navigator>
 );
 
 export const TabNavigator = () => {
@@ -32,21 +61,21 @@ export const TabNavigator = () => {
       >
         <Tab.Screen
           name="Markets"
-          component={MarketsScreen}
+          component={MarketsStackScreen}
           options={{
             tabBarIcon: ({ focused }) => <TabIcon name="Markets" focused={focused} />,
           }}
         />
         <Tab.Screen
           name="Feed"
-          component={FeedScreen}
+          component={FeedStackScreen}
           options={{
             tabBarIcon: ({ focused }) => <TabIcon name="Feed" focused={focused} />,
           }}
         />
         <Tab.Screen
           name="Profile"
-          component={ProfileScreen}
+          component={ProfileStackScreen}
           options={{
             tabBarIcon: ({ focused }) => <TabIcon name="Profile" focused={focused} />,
           }}

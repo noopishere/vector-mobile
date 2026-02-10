@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <rect width="512" height="512" fill="#000000"/>
+  <!-- Two overlapping angles -->
+  <path d="M150,340 L256,160 L362,340" stroke="#ffffff" stroke-width="14" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  <path d="M190,340 L296,160 L402,340" stroke="#505050" stroke-width="14" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+</svg>

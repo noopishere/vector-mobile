@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <rect width="512" height="512" fill="#000000"/>
+  <!-- Simple arrow pointing up-right -->
+  <path d="M150,362 L362,150" stroke="#ffffff" stroke-width="16" stroke-linecap="round"/>
+  <path d="M362,150 L362,260" stroke="#ffffff" stroke-width="16" stroke-linecap="round"/>
+  <path d="M362,150 L252,150" stroke="#ffffff" stroke-width="16" stroke-linecap="round"/>
+</svg>

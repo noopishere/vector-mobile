@@ -12,6 +12,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { colors } from '../theme/colors';
 import { useAppStore, Market } from '../store/useAppStore';
 import { MarketCard } from '../components';
+import { useNavigation } from '@react-navigation/native';
 
 const categories = ['All', 'Trending', 'Crypto', 'Economics', 'Technology', 'Politics', 'Finance'];
 
@@ -19,7 +20,13 @@ export const MarketsScreen = () => {
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [searchQuery, setSearchQuery] = useState('');
   const [refreshing, setRefreshing] = useState(false);
-  const { markets } = useAppStore();
+  const { markets, watchlist } = useAppStore();
+  const navigation = useNavigation<any>();
+
+  const watchedMarkets = useMemo(
+    () => markets.filter((m) => watchlist.includes(m.id)),
+    [markets, watchlist]
+  );
 
   const filteredMarkets = useMemo(() => {
     return markets.filter((market) => {
@@ -46,8 +53,7 @@ export const MarketsScreen = () => {
   };
 
   const handleMarketPress = (market: Market) => {
-    // TODO: Navigate to market detail
-    console.log('Market pressed:', market.id);
+    navigation.navigate('MarketDetail', { marketId: market.id });
   };
 
   return (
@@ -108,6 +114,22 @@ export const MarketsScreen = () => {
             onPress={handleMarketPress}
           />
         )}
+        ListHeaderComponent={
+          watchedMarkets.length > 0 ? (
+            <View style={styles.watchlistSection}>
+              <Text style={styles.watchlistTitle}>★ WATCHLIST</Text>
+              {watchedMarkets.map((market) => (
+                <MarketCard
+                  key={market.id}
+                  market={market}
+                  compact
+                  onPress={handleMarketPress}
+                />
+              ))}
+              <View style={styles.watchlistDivider} />
+            </View>
+          ) : null
+        }
         contentContainerStyle={styles.marketsList}
         showsVerticalScrollIndicator={false}
         refreshControl={
@@ -200,5 +222,21 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontFamily: 'Inter_400Regular',
     color: colors.text.tertiary,
+  },
+  watchlistSection: {
+    marginBottom: 16,
+  },
+  watchlistTitle: {
+    fontSize: 11,
+    fontFamily: 'Inter_600SemiBold',
+    color: colors.text.tertiary,
+    letterSpacing: 1,
+    marginBottom: 10,
+  },
+  watchlistDivider: {
+    height: 1,
+    backgroundColor: colors.border,
+    marginTop: 8,
+    marginBottom: 8,
   },
 });

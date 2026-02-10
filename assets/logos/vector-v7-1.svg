@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <rect width="512" height="512" fill="#000000"/>
+  <!-- Simple angled lines - like stacked pages/outcomes -->
+  <path d="M160,140 L160,372" stroke="#ffffff" stroke-width="14" stroke-linecap="round"/>
+  <path d="M160,140 L300,200" stroke="#ffffff" stroke-width="14" stroke-linecap="round"/>
+  <path d="M160,220 L280,270" stroke="#ffffff" stroke-width="14" stroke-linecap="round"/>
+  <path d="M160,300 L260,340" stroke="#ffffff" stroke-width="14" stroke-linecap="round"/>
+</svg>
